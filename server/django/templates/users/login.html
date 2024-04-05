@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+ログイン
+{% endblock title %}
+
+{% block content %}
+<h1>ここはログイン用ページです。</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="ログイン">
+</form>
+
+<form method="post" action="{% url 'users:login' %}" class="form-group">
+    {% csrf_token %}
+    {% for item in form %}
+        <div class="form-group">
+            <label for="{{item.id_for_label}}">{{item.label}}</label>
+            <input
+                type="{{item.field.widget.input_type}}"
+                class="form-control"
+                {% if item.field.required %}required{% endif %}
+                name="{{item.name}}"
+                id="{{item.id_for_label}}">
+        </div>
+    {% endfor %}
+    <button type="submit" class="submit btn btn-primary">Login</button>
+    <input type="hidden" name="next" value="{{ next }}"/>
+</form>
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{user.username}}さん
+{% endblock title %}
+
+{% block content %}
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
+    <div class="col-md-6 p-lg-5 mx-auto my-5">
+        <h1 class="display-3 fw-bold">
+            {{ profile.username }}さん
+        </h1>
+        <h3 class="fw-normal text-muted mb-3">累計達成金額: {{ total_fine_done }}円</h3>
+        <h3 class="fw-normal text-muted mb-3">挑戦中金額: {{ total_fine_in_progress }}円</h3>
+        <h3 class="fw-normal text-muted mb-3">累計罰金額: {{ total_fine_failed }}円</h3>
+    </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+
+<h2>今日のタスク</h2>
+{% for todo in todo_list_today %}
+<div class="card shadow-sm">
+    <h5 class="card-header">{{ todo.task.fine }}円</h5>
+    <div class="card-body">
+        <h5 class="card-title">{{ todo.task.title }}</h5>
+        <a href="{% url 'tasks:task-detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
+        {% if user == todo.task.user %}
+            {% if todo.status == "I" %}
+            <a href="{% url 'tasks:todo-done' todo.id %}" class="btn btn-secondary">達成したらClick</a>
+            {% elif todo.status == "D" %}
+            <a class="btn btn-success disabled" role="button" aria-disabled="true">達成済み</a>
+            {% endif %}
+        {% endif %}
+
+    </div>
+</div>
+{% empty %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        今日のタスクはありません
+    </div>
+</div>
+{% endfor %}
+
+
+<p></p>
+<div class="d-grid gap-2">
+    <a href="{% url 'tasks:create-task' %}" class="btn btn-outline-secondary">新しいタスクを作成する</a>
+</div>
+<p></p>
+
+<h2>明日のタスク</h2>
+{% for todo in todo_list_tomorrow %}
+<div class="card shadow-sm">
+    <h5 class="card-header">{{ todo.task.fine }}円</h5>
+    <div class="card-body">
+        <h5 class="card-title">{{ todo.task.title }}</h5>
+        <a href="{% url 'tasks:task-detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
+        {% if user == todo.task.user %}
+        <a class="btn btn-secondary disabled" role="button" aria-disabled="true">明日のタスクです</a>
+        {% endif %}
+    </div>
+</div>
+<p></p>
+{% empty %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        明日のタスクはありません
+    </div>
+</div>
+{% endfor %}
+
+
+
+{% endblock content %}
