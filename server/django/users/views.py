@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from tasks.models import Task, Todo
 
 from .forms import SignUpForm
@@ -16,7 +16,6 @@ User = get_user_model()
 class SignUpView(CreateView):
     template_name = "users/signup.html"
     form_class = SignUpForm
-    success_url = reverse_lazy("users:profile")
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -25,6 +24,13 @@ class SignUpView(CreateView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return response
+
+    def get_success_url(self):
+        # 処理の順番的に，直接プロファイルにリダイレクトできないため，ワンクッション置いている．
+        # form_validでsuper().form_validを最初に呼ぶと，get_success_urlでrequest.userが取得できない．
+        # form_validでsuper().form_validを最後に呼ぶと，ログインができなくなる．
+        return reverse_lazy('users:profile_redirect')
+
 
 
 class CustomLoginView(LoginView):
@@ -71,3 +77,11 @@ class UserProfileView(TemplateView):
         context["total_fine_done"] = total_fine_done if total_fine_done else 0
         context["total_fine_failed"] = total_fine_failed if total_fine_failed else 0
         return context
+
+
+class UserProfileRedirectView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        user = self.request.user
+        return reverse_lazy("users:profile", kwargs={"pk": user.id})

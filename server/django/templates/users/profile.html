@@ -48,11 +48,12 @@
 
 
 <p></p>
+{% if user == profile %}
 <div class="d-grid gap-2">
     <a href="{% url 'tasks:task_form' %}" class="btn btn-outline-secondary">新しいタスクを作成する</a>
-
 </div>
 <p></p>
+{% endif %}
 
 <h2>明日のタスク</h2>
 {% for todo in todo_list_tomorrow %}

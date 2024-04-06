@@ -37,7 +37,7 @@ class TaskConfirmView(TemplateView):
             title=form_data['title'],
             fine=form_data['fine'],
         )
-        today = datetime.now().date()
+        today = task.created_at.date()
         for i in range(1, 8):
             Todo.objects.create(task=task, date=today + timedelta(days=i))
         

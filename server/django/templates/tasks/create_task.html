@@ -15,19 +15,57 @@
     <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </div>
 
-<form method="post" action="{% url 'tasks:task_form' %}">
+<form method="post" action="{% url 'tasks:task_form' %}" novalidate>
     {% csrf_token %}
+    {% if form.non_field_errors %}
+        <p></p>
+        <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="mb-3">
         <label for="{{ form.title.id_for_label }}" class="form-label">タスク名</label>
-        <input type="{{ form.title.field.widget.input_type }}" class="form-control" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}" aria-describedby="titleHelp">
+        <input
+            type="{{ form.title.field.widget.input_type }}"
+            class="form-control {% if form.title.errors and request.method == 'POST' %}is-invalid{% endif %}"
+            name="{{ form.title.name }}"
+            id="{{ form.title.id_for_label }}"
+            aria-describedby="titleHelp"
+            value="{{ form.title.value|default_if_none:'' }}"
+        >
+        {% if form.title.errors and request.method == 'POST' %}
+            {% for error in form.title.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <div id="titleHelp" class="form-text">明日から7日間取り組む内容を入力してください<br>
         例: 20分間読書をする</div>
+        <div id="titleHelp" class="form-text">{{ form.title.help_text }}</div>
     </div>
     <div class="mb-3">
         <label for="{{ form.fine.id_for_label }}" class="form-label">罰金額</label>
-        <input type="{{ form.fine.field.widget.input_type }}" class="form-control" name="{{ form.fine.name }}" id="{{ form.fine.id_for_label }}" aria-describedby="fineHelp">
+        <input 
+            type="{{ form.fine.field.widget.input_type }}"
+            class="form-control {% if form.fine.errors and request.method == 'POST' %}is-invalid{% endif %}"
+            name="{{ form.fine.name }}"
+            id="{{ form.fine.id_for_label }}"
+            aria-describedby="fineHelp"
+            value="{{ form.fine.value|default_if_none:'' }}"
+        >
+        {% if form.fine.errors and request.method == 'POST' %}
+            {% for error in form.fine.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <div id="fineHelp" class="form-text">継続できなかった際に支払う金額を入力してください<br>
         例: 500</div>
+        <div id="fineHelp" class="form-text">{{ form.fine.help_text }}</div>
     </div>
     <button type="submit" class="btn btn-primary">タスク作成</button>
 </form>
