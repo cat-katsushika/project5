@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+タスク確認
+{% endblock title %}
+
+{% block content %}
+<div class="position-relative overflow-hidden p-3 p-md-3 m-md-3 text-center bg-light">
+    <div class="col-md-6 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 fw-bold">タスク確認</h1>
+        <p class="lead">以下の内容でタスクを作成します<br>内容をご確認ください<br>※一度作成したタスクは途中で中断できません</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="mb-3">
+                <label class="form-label">タスク名</label>
+                <input type="text" readonly class="form-control-plaintext" id="staticTitle" value="{{ form_data.title }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">罰金額</label>
+                <input type="text" readonly class="form-control-plaintext" id="staticFine" value="{{ form_data.fine }}円">
+            </div>
+            <form method="post" action="{% url 'tasks:confirm_task' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">この内容で作成</button>
+                <a href="{% url 'tasks:task_form' %}" class="btn btn-secondary">編集する</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
