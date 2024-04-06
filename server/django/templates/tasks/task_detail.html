@@ -13,9 +13,9 @@
             {{ task.title }}
             {% if task.status == "I" %}
             <span class="badge text-bg-secondary">継続中</span>
-            {% elif todo.status == "D" %}
+            {% elif task.status == "D" %}
             <span class="badge text-bg-success">達成済み</span>
-            {% elif todo.status == "F" %}
+            {% elif task.status == "F" %}
             <span class="badge text-bg-danger">失敗</span>
             {% endif %}
         </h1>
