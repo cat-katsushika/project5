@@ -43,7 +43,7 @@
                 </div>
             {% endfor %}
         {% endif %}
-        <div id="usernameHelp" class="form-text">ユーザーネームを入力してください</div>
+        <div id="usernameHelp" class="form-text">ユーザーネームを入力してください．</div>
         <div id="usernameHelp" class="form-text">{{ form.username.help_text }}</div>
     </div>
     <div class="mb-3">
@@ -85,6 +85,26 @@
         {% endif %}
         <div id="passwordHelp" class="form-text">{{ form.password2.help_text }}</div>
     </div>
+
+    <div class="form-group form-check">
+        <input
+            type="checkbox"
+            class="form-check-input {% if form.terms_accepted.errors and request.method == 'POST' %}is-invalid{% endif %}"
+            name="{{ form.terms_accepted.name }}"
+            id="termsCheckbox">
+        <label class="form-check-label" for="termsCheckbox">
+            <a href="{% url 'terms_and_conditions:terms_of_service' %}" target="_blank">利用規約</a>と<a href="{% url 'terms_and_conditions:privacy_policy' %}" target="_blank">プライバシーポリシー</a>に同意します。
+        </label>
+        {% if form.terms_accepted.errors and request.method == 'POST' %}
+            {% for error in form.terms_accepted.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <p></p>
+
     <button type="submit" class="btn btn-primary">新規登録</button>
 </form>
 

@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     # Original apps
     "users",
     "tasks",
+    "contacts",
+    "payments",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 LOGOUT_REDIRECT_URL = "users:home"
+
+
+REGULAR_EXECUTION_TOKEN = env("REGULAR_EXECUTION_TOKEN")
+
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")

@@ -11,7 +11,9 @@
     <div class="col-md-6 p-lg-5 mx-auto my-5">
         <h1 class="display-3 fw-bold">
             {{ task.title }}
-            {% if task.status == "I" %}
+            {% if task.status == "N" %}
+            <span class="badge text-bg-primary">未開始</span>
+            {% elif task.status == "I" %}
             <span class="badge text-bg-secondary">継続中</span>
             {% elif task.status == "D" %}
             <span class="badge text-bg-success">達成済み</span>
@@ -39,7 +41,9 @@
         <div class="fw-bold">{{ todo.date }} : {{ todo.date|days_diff:todo.task.created_at }}</div>
             {{ todo.task.title }}
         </div>
-        {% if todo.status == "I" %}
+        {% if task.status == "N" %}
+        <span class="badge text-bg-primary">未開始</span>
+        {% elif todo.status == "I" %}
         <span class="badge text-bg-secondary">挑戦待ち</span>
         {% elif todo.status == "D" %}
         <span class="badge text-bg-success">達成済み</span>

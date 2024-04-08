@@ -3,7 +3,7 @@
 {% load datetime_filters %}
 
 {% block title %}
-{{user.username}}さん
+{{ profile.username}}さん
 {% endblock title %}
 
 {% block content %}
@@ -12,12 +12,23 @@
         <h1 class="display-3 fw-bold">
             {{ profile.username }}さん
         </h1>
-        <h3 class="fw-normal text-muted mb-3">累計達成金額: {{ total_fine_done }}円</h3>
-        <h3 class="fw-normal text-muted mb-3">挑戦中金額: {{ total_fine_in_progress }}円</h3>
-        <h3 class="fw-normal text-muted mb-3">累計罰金額: {{ total_fine_failed }}円</h3>
+        <h3 class="fw-normal text-muted mb-3">総継続達成金額: {{ total_fine_done }}円</h3>
+        <h3 class="fw-normal text-muted mb-3">現在挑戦中金額: {{ total_fine_in_progress }}円</h3>
+        <h3 class="fw-normal text-muted mb-3">総継続失敗額: {{ total_fine_failed }}円</h3>
+        <a
+            href="{% url 'users:change_username' %}"
+            class="btn btn-secondary"
+        >
+            ユーザー名を変更する
+        </a>
+        <a
+            href="{% url 'users:deactivate_confirm'%}"
+            class="btn btn-danger"
+        >
+        アカウントを削除する
+        </a>
+
     </div>
-    <div class="product-device shadow-sm d-none d-md-block"></div>
-    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </div>
 
 <h2>今日のタスク</h2>
@@ -27,10 +38,17 @@
     <div class="card-body">
         <h5 class="card-title">{{ todo.task.title }}</h5>
         <a class="btn btn-secondary disabled" role="button" aria-disabled="true">{{ todo.date|days_diff:todo.task.created_at }}</a>
-        <a href="{% url 'tasks:task-detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
+        <a href="{% url 'tasks:task_detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
         {% if user == todo.task.user %}
             {% if todo.status == "I" %}
-            <a href="{% url 'tasks:todo-done' todo.id %}" class="btn btn-secondary">達成したらClick</a>
+            <button
+                data-button="when-done"
+                data-url="{% url 'tasks:todo_done' todo.id %}"
+                name="{{ todo.id}}"
+                class="btn btn-secondary"
+            >
+                達成したらクリック
+            </button>
             {% elif todo.status == "D" %}
             <a class="btn btn-success disabled" role="button" aria-disabled="true">達成済み</a>
             {% endif %}
@@ -62,7 +80,7 @@
     <div class="card-body">
         <h5 class="card-title">{{ todo.task.title }}</h5>
         <a class="btn btn-secondary disabled" role="button" aria-disabled="true">{{ todo.date|days_diff:todo.task.created_at }}</a>
-        <a href="{% url 'tasks:task-detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
+        <a href="{% url 'tasks:task_detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
         {% if user == todo.task.user %}
         <a class="btn btn-secondary disabled" role="button" aria-disabled="true">明日のタスクです</a>
         {% endif %}
@@ -78,5 +96,75 @@
 {% endfor %}
 
 
+<div class="container mt-5">
+    <h2 class="mb-4">{{ profile.username }}さんのタスク一覧</h2>
+    <div class="row">
 
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">達成したタスク</div>
+                <ul class="list-group list-group-flush">
+                    {% for task in done_tasks %}
+                    <li class="list-group-item">
+                        <span class="badge bg-white border rounded text-black">{{ task.fine }}円</span>
+                        {% if task.status == "I" %}
+                        <span class="badge text-bg-secondary">継続中</span>
+                        {% elif task.status == "D" %}
+                        <span class="badge text-bg-success">達成済み</span>
+                        {% elif task.status == "F" %}
+                        <span class="badge text-bg-danger">失敗</span>
+                        {% endif %}
+                        <a href="{% url 'tasks:task_detail' task.id %}" class="text-body-secondary">{{ task.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">現在挑戦中のタスク</div>
+                <ul class="list-group list-group-flush">
+                    {% for task in in_progress_tasks %}
+                    <li class="list-group-item">
+                        <span class="badge bg-white border rounded text-black">{{ task.fine }}円</span>
+                        {% if task.status == "I" %}
+                        <span class="badge text-bg-secondary">継続中</span>
+                        {% elif task.status == "D" %}
+                        <span class="badge text-bg-success">達成済み</span>
+                        {% elif task.status == "F" %}
+                        <span class="badge text-bg-danger">失敗</span>
+                        {% endif %}
+                        <a href="{% url 'tasks:task_detail' task.id %}" class="text-body-secondary">{{ task.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">失敗したタスク</div>
+                <ul class="list-group list-group-flush">
+                    {% for task in failed_tasks %}
+                    <li class="list-group-item">
+                        <span class="badge bg-white border rounded text-black">{{ task.fine }}円</span>
+                        {% if task.status == "I" %}
+                        <span class="badge text-bg-secondary">継続中</span>
+                        {% elif task.status == "D" %}
+                        <span class="badge text-bg-success">達成済み</span>
+                        {% elif task.status == "F" %}
+                        <span class="badge text-bg-danger">失敗</span>
+                        {% endif %}
+                        <a href="{% url 'tasks:task_detail' task.id %}" class="text-body-secondary">{{ task.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'tasks/scripts.html' %}
 {% endblock content %}

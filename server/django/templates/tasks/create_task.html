@@ -43,7 +43,7 @@
             {% endfor %}
         {% endif %}
         <div id="titleHelp" class="form-text">明日から7日間取り組む内容を入力してください<br>
-        例: 20分間読書をする</div>
+        入力例: 20分間読書をする</div>
         <div id="titleHelp" class="form-text">{{ form.title.help_text }}</div>
     </div>
     <div class="mb-3">
@@ -63,8 +63,12 @@
                 </div>
             {% endfor %}
         {% endif %}
-        <div id="fineHelp" class="form-text">継続できなかった際に支払う金額を入力してください<br>
-        例: 500</div>
+        <div id="fineHelp" class="form-text">
+            継続できなかった際に支払う金額(円)を入力してください<br>
+            「0」または「50から100000(10万)」までの整数値を入力することができます<br>
+            入力例1: 0<br>
+            入力例2: 500
+        </div>
         <div id="fineHelp" class="form-text">{{ form.fine.help_text }}</div>
     </div>
     <button type="submit" class="btn btn-primary">タスク作成</button>

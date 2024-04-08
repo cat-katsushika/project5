@@ -5,7 +5,6 @@ from . import models
 
 @admin.register(models.User)
 class UserAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "username",
@@ -26,6 +25,4 @@ class UserAdmin(admin.ModelAdmin):
         "email",
     )
 
-    ordering = (
-        "username",
-    )
+    ordering = ("username",)
