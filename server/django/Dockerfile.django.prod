@@ -1,3 +1,6 @@
+# imgを作る手順書
+
+# PYthonが使えるコンテナを基準に
 FROM python:3.11-slim-bullseye
 
 RUN apt-get update && apt-get install -y \
@@ -13,3 +16,6 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 COPY . /django/
+
+RUN chmod +x /django/entrypoint.sh
+CMD ["bash", "/django/entrypoint.sh"]

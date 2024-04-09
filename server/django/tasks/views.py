@@ -47,7 +47,7 @@ class TaskConfirmView(TemplateView):
             fine=form_data["fine"],
         )
         today = task.created_at.date()
-        for i in range(1, 8):
+        for i in range(1, 6):
             Todo.objects.create(task=task, date=today + timedelta(days=i))
 
         return redirect("payments:create_checkout_session", pk=task.id)
@@ -89,7 +89,7 @@ def todo_done_view(request, pk):
     todo.save()
 
     completed_todo_count = Todo.objects.filter(task=todo.task, status=Todo.DONE).count()
-    if completed_todo_count == 7:
+    if completed_todo_count == 5:
         todo.task.status = Task.DONE
         todo.task.save()
 

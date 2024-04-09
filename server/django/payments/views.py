@@ -31,7 +31,7 @@ def create_checkout_session_view(request, pk):
                 'currency': 'jpy',
                 'product_data': {
                     'name': task.title,
-                    'description': '7日間の継続を達成しましょう！7日間の継続に成功した場合，支払いは実行されません'
+                    'description': '5日間の継続を達成しましょう！5日間の継続に成功した場合，支払いは実行されません'
                 },
                 'unit_amount': task.fine,
             },

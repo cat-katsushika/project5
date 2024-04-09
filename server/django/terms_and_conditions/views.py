@@ -6,3 +6,6 @@ def terms_of_service(request):
 
 def privacy_policy(request):
     return render(request, "terms_and_conditions/privacy_policy.html")
+
+def specified_commercial_transaction_act(request):
+    return render(request, "terms_and_conditions/specified_commercial_transaction_act.html")
