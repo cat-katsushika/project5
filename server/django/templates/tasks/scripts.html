@@ -1,0 +1,49 @@
+<script>
+    const getCookie = name => {
+        if (document.cookie && document.cookie !== "") {
+            for (const cookie of document.cookie.split(";")) {
+                const [key, value] = cookie.trim().split("=");
+                if (key === name) {
+                    return decodeURIComponent(value);
+                }
+            }
+        }
+    };
+    const csrfToken = getCookie('csrftoken');
+
+
+    const changeStyles = (jsonResponse) => {
+        const selector = document.getElementsByName(jsonResponse.todo_id)[0];
+        
+        selector.setAttribute('data-url', "");
+        selector.classList.replace('btn-secondary', 'btn-success');
+        selector.classList.add('disabled');
+        selector.innerHTML = "達成済み";
+    }
+
+    const whenDoneButtons = document.querySelectorAll('[data-button="when-done"]');
+    whenDoneButtons.forEach(whenDoneButton => {
+        const whenDoneFunc = function () {
+            const todo_id = whenDoneButton.getAttribute("name");
+            const url = whenDoneButton.dataset.url;
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: "include"
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Not ok');
+                }
+                return response.json();
+            }).then(data => {
+                changeStyles(data);
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+        whenDoneButton.addEventListener("click", whenDoneFunc)
+    })
+</script>
