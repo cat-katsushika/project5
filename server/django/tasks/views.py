@@ -1,24 +1,21 @@
+import json
 from datetime import datetime, timedelta
+
 import stripe
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
-from django.views.generic.base import RedirectView
-from django.views.generic.edit import CreateView, FormView
-from django.http import JsonResponse
-import json
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.edit import FormView
+from payments.models import Payment
 
 from .forms import TaskForm
-from .models import Task, Todo, RegularExecutionLog
-
-from payments.models import Payment
+from .models import RegularExecutionLog, Task, Todo
 
 
 class TaskFormView(FormView):
@@ -81,10 +78,10 @@ def todo_done_view(request, pk):
     # 当日以外のタスクに対しては403を返す
     if todo.date != datetime.now().date():
         return HttpResponseForbidden()
-    
+
     if todo.status != Todo.IN_PROGRESS:
         return HttpResponseForbidden()
-    
+
     todo.status = Todo.DONE
     todo.save()
 
@@ -101,8 +98,8 @@ def todo_done_view(request, pk):
 @csrf_exempt
 @require_POST
 def regular_execution_view(request):
-    data = json.loads(request.body.decode('utf-8'))  # request.bodyはbytes型なのでデコードが必要
-    token = data.get('token', '')
+    data = json.loads(request.body.decode("utf-8"))  # request.bodyはbytes型なのでデコードが必要
+    token = data.get("token", "")
     if token != settings.REGULAR_EXECUTION_TOKEN:
         RegularExecutionLog.objects.create(status=RegularExecutionLog.FAILURE, message="invalid token")
         # 1000件を超えたら古いログを削除
@@ -110,7 +107,7 @@ def regular_execution_view(request):
         if logs.count() > 1000:
             logs.order_by("created_at").first().delete()
         return JsonResponse({"message": "invalid token"}, status=403)
-    
+
     yesterday = datetime.now().date() - timedelta(days=1)
     yesterday_not_done_todos = Todo.objects.filter(date=yesterday, status=Todo.IN_PROGRESS)
     for todo in yesterday_not_done_todos:

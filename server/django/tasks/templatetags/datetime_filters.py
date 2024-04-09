@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from django import template
 
 register = template.Library()
@@ -12,5 +10,5 @@ def days_diff(value, arg):
         # valueとargがdatetimeオブジェクトであると仮定
         delta = value - arg.date()
         return str(delta.days) + "日目"
-    except Exception as e:
+    except Exception:
         return ""

@@ -105,9 +105,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "task",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="tasks.task"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="tasks.task"),
                 ),
             ],
         ),

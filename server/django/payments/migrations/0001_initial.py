@@ -29,9 +29,7 @@ class Migration(migrations.Migration):
                 ("checkout_session_id", models.CharField(max_length=100)),
                 (
                     "task",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="tasks.task"
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="tasks.task"),
                 ),
             ],
         ),

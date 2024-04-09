@@ -33,6 +33,7 @@ class TodoAdmin(admin.ModelAdmin):
         "date",
     )
 
+
 @admin.register(models.RegularExecutionLog)
 class RegularExecutionLogAdmin(admin.ModelAdmin):
     pass

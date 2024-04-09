@@ -1,24 +1,22 @@
 import stripe
+
 from django.conf import settings
 from django.shortcuts import redirect
-from django.views.generic import TemplateView
 from django.urls import reverse
-
+from django.views.generic import TemplateView
+from tasks.models import Task
 
 from .models import Payment
 
-from tasks.models import Task
-
 
 def create_checkout_session_view(request, pk):
-
     task = Task.objects.get(pk=pk)
     if task is None:
         return redirect("users:home")
-    
+
     if Payment.objects.filter(task=task).exists():
         return redirect("users:home")
-    
+
     relative_success_url = reverse("payments:success", kwargs={"pk": task.id})
     relative_cancel_url = reverse("payments:cancel", kwargs={"pk": task.id})
     success_url = request.build_absolute_uri(relative_success_url)
@@ -26,22 +24,21 @@ def create_checkout_session_view(request, pk):
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
     session = stripe.checkout.Session.create(
-        line_items=[{
-            'price_data': {
-                'currency': 'jpy',
-                'product_data': {
-                    'name': task.title,
-                    'description': '5日間の継続を達成しましょう！5日間の継続に成功した場合，支払いは実行されません'
+        line_items=[
+            {
+                "price_data": {
+                    "currency": "jpy",
+                    "product_data": {
+                        "name": task.title,
+                        "description": "5日間の継続を達成しましょう！5日間の継続に成功した場合，支払いは実行されません",
+                    },
+                    "unit_amount": task.fine,
                 },
-                'unit_amount': task.fine,
-            },
-            'quantity': 1,
-        }],
-        metadata={
-            "user_id": task.user.id,
-            "task_id": task.id
-        },
-        mode='payment',
+                "quantity": 1,
+            }
+        ],
+        metadata={"user_id": task.user.id, "task_id": task.id},
+        mode="payment",
         payment_intent_data={"capture_method": "manual"},
         success_url=success_url,
         cancel_url=cancel_url,
@@ -50,7 +47,7 @@ def create_checkout_session_view(request, pk):
     Payment.objects.create(
         task=task,
         payment_intent_id=session.payment_intent,
-        checkout_session_id=session.id
+        checkout_session_id=session.id,
     )
 
     return redirect(session.url)
@@ -63,10 +60,10 @@ class PaymentSuccessView(TemplateView):
         task = Task.objects.get(pk=kwargs["pk"])
         if task is None:
             return redirect("users:home")
-        
+
         if not Payment.objects.filter(task=task).exists():
             return redirect("users:home")
-        
+
         # 罰金額が0の場合はpayment_intent_idがないため，そのままタスクを進行中にする
         if task.fine != 0:
             payment = Payment.objects.get(task=task)
@@ -79,7 +76,6 @@ class PaymentSuccessView(TemplateView):
             if payment_intent.status != "requires_capture":
                 task.delete()
                 return redirect("users:home")
-
 
         task.status = Task.IN_PROGRESS
         task.save()
@@ -96,8 +92,6 @@ class PaymentSuccessView(TemplateView):
         return context
 
 
-
-
 class PaymentCancelView(TemplateView):
     template_name = "payments/cancel.html"
 
@@ -105,9 +99,9 @@ class PaymentCancelView(TemplateView):
         task = Task.objects.get(pk=kwargs["pk"])
         if task is None:
             return redirect("users:home")
-        
+
         if not Payment.objects.filter(task=task).exists():
             return redirect("users:home")
-        
+
         task.delete()
         return super().get(request, *args, **kwargs)

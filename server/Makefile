@@ -48,3 +48,27 @@ exec:
 .PHONY: delete
 delete:
 	rm -rf db/
+
+
+
+.PHONY: prod-build
+prod-build:
+	docker compose -f docker-compose-prod.yml build
+
+.PHONY: prod-up-d
+prod-up-d:
+	docker compose -f docker-compose-prod.yml up -d
+
+.PHONY: prod
+prod:
+	@make prod-build
+	@make prod-up-d
+
+.PHONY: proddown
+proddown:
+	docker compose -f docker-compose-prod.yml down
+
+
+.PHONY: prodlogs
+prodlogs:
+	docker compose -f docker-compose-prod.yml logs -f

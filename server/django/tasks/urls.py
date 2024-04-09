@@ -1,13 +1,6 @@
-from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from .views import (
-    TaskConfirmView,
-    TaskDetailView,
-    TaskFormView,
-    todo_done_view,
-    regular_execution_view,
-)
+from .views import TaskConfirmView, TaskDetailView, TaskFormView, regular_execution_view, todo_done_view
 
 app_name = "tasks"
 
