@@ -21,3 +21,7 @@ class UsernameChangeForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["username"]
+
+
+class AdminOneTimePasswordForm(forms.Form):
+    one_time_password = forms.CharField(label="ワンタイムパスワード", required=True, max_length=6)

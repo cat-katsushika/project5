@@ -72,3 +72,7 @@ proddown:
 .PHONY: prodlogs
 prodlogs:
 	docker compose -f docker-compose-prod.yml logs -f
+
+.PHONY: prodexec
+prodexec:
+	docker compose -f docker-compose-prod.yml exec django bash

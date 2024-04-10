@@ -1,18 +1,21 @@
 from datetime import datetime, timedelta
 
+import pyotp
+
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Sum
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import UpdateView
 from tasks.models import Task, Todo
 
-from .forms import SignUpForm, UsernameChangeForm
+from .forms import AdminOneTimePasswordForm, SignUpForm, UsernameChangeForm
 
 User = get_user_model()
 
@@ -167,3 +170,26 @@ def deactivate_account_view(request):
 
     # ホームページなど、適切なページにリダイレクト
     return redirect("users:home")
+
+
+def custom_admin_auth_view(request):
+    """
+    Adminページにワンタイムパスワードを設定するためのカスタム認証ビュー
+    """
+    if request.method == "POST":
+        form = AdminOneTimePasswordForm(request.POST)
+
+        if form.is_valid():
+            one_time_password = form.cleaned_data.get("one_time_password")
+
+            # ワンタイムパスワードの検証
+            if pyotp.TOTP(settings.ONE_TIME_PASSWORD_SECRET).verify(one_time_password):
+                request.session["custom_admin_auth"] = True
+                return redirect("/admin/KOgEdTnMXbsDJa8jK347oaVqVzbshgIfhOWBjim9uEA5RfsEpl/")
+            else:
+                form.add_error(None, "ワンタイムパスワードが正しくありません")
+    else:
+        form = AdminOneTimePasswordForm()
+        request.session["custom_admin_auth"] = False
+
+    return render(request, "users/custom_admin_auth.html", {"form": form})
