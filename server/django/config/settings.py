@@ -45,6 +45,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "users.middleware.CustomAdminAuthMiddleware",  # Custom middleware
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -134,3 +135,5 @@ LOGOUT_REDIRECT_URL = "users:home"
 REGULAR_EXECUTION_TOKEN = env("REGULAR_EXECUTION_TOKEN")
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+
+ONE_TIME_PASSWORD_SECRET = env("ONE_TIME_PASSWORD_SECRET")

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+管理者画面用ワンタイムパスワード入力画面
+{% endblock title %}
+
+{% block content %}
+<div class="position-relative overflow-hidden p-3 p-md-0 m-md-3 text-center bg-body-tertiary">
+    <div class="col-md-6 p-lg-5 mx-auto my-5">
+        <h1 class="display-3 fw-bold">
+            管理者画面用ワンタイムパスワード入力画面
+        </h1>
+    </div>
+</div>
+
+<form method="post" action="{% url 'custom-admin-auth' %}" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <p></p>
+        <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="mb-3">
+        <label for="{{ form.one_time_password.id_for_label }}" class="form-label">{{ form.one_time_password.label }}</label>
+        <input
+            type="text"
+            class="form-control {% if form.one_time_password.errors and request.method == 'POST' %}is-invalid{% endif %}"
+            name="{{ form.one_time_password.name }}"
+            id="{{ form.one_time_password.id_for_label }}"
+            aria-describedby="oneTimePasswordHelp"
+            value="{{ form.one_time_password.value|default_if_none:'' }}"
+        >
+        {% if form.one_time_password.errors and request.method == 'POST' %}
+            {% for error in form.one_time_password.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div id="oneTimePasswordHelp" class="form-text">ワンタイムパスワードを入力してください</div>
+        <div id="oneTimePasswordeHelp" class="form-text">{{ form.one_time_password.help_text }}</div>
+    </div>
+    <button type="submit" class="btn btn-primary">提出</button>
+</form>
+{% endblock content %}
