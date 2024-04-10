@@ -26,3 +26,14 @@ class UserAdmin(admin.ModelAdmin):
     )
 
     ordering = ("username",)
+
+
+@admin.register(models.LoginAttempt)
+class LoginAttemptAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "attempts",
+        "last_attempt",
+    )
+
+    ordering = ("user",)

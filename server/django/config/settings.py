@@ -18,6 +18,10 @@ DEBUG = env.bool("DJANGO_DEBUG", default=False)
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 
 
+AUTHENTICATION_BACKENDS = [
+    'users.backends.LimitLoginBackend',  # カスタム認証バックエンドのみを使用
+]
+
 # Application definition
 
 INSTALLED_APPS = [
