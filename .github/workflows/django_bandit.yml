@@ -18,10 +18,9 @@ jobs:
       with:
         python-version: '3.11' # プロジェクトに合わせてPythonのバージョンを指定
 
-    - name: Install dependencies
+    - name: Install badit
       run: |
-        pip install -r requirements.txt
-      working-directory: ./server/django
+        pip install bandit
 
 
 
