@@ -10,3 +10,4 @@ django-environ==0.11.2
 stripe>=5.0.0
 gunicorn==21.2.0
 pyotp==2.9.0
+django-axes==6.4.0 # ip blocking

@@ -19,7 +19,8 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 
 
 AUTHENTICATION_BACKENDS = [
-    'users.backends.LimitLoginBackend',  # カスタム認証バックエンドのみを使用
+    'axes.backends.AxesStandaloneBackend',
+    'users.backends.LimitLoginBackend',  # カスタム認証バックエンドに変更
 ]
 
 # Application definition
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third party
     "rest_framework",
+    "axes",
     # Original apps
     "users",
     "tasks",
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "users.middleware.CustomAdminAuthMiddleware",  # Custom middleware
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -143,3 +146,7 @@ STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 ONE_TIME_PASSWORD_SECRET = env("ONE_TIME_PASSWORD_SECRET")
 
 CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=[])
+
+
+AXES_FAILURE_LIMIT = 10 # ログイン失敗回数の上限
+AXES_RESET_ON_SUCCESS = True # ログイン成功時に失敗回数をリセット
