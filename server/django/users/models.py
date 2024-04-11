@@ -11,6 +11,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
 class LoginAttempt(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     attempts = models.IntegerField(default=0)

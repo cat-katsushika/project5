@@ -1,10 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ValidationError
-from .models import LoginAttempt
 from django.utils import timezone
-from django.contrib.auth import get_user_model
+
+from .models import LoginAttempt
 
 User = get_user_model()
+
 
 class LimitLoginBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
@@ -18,15 +20,15 @@ class LimitLoginBackend(ModelBackend):
         # ユーザーがスーパーユーザーでなければ、通常の認証プロセスを続行
         if not user.is_superuser:
             return super().authenticate(request, username=username, password=password, **kwargs)
-        
+
         # ログイン試行を追跡するオブジェクトを取得または作成
         login_attempt, _ = LoginAttempt.objects.get_or_create(user=user)
-        
+
         # アカウントがロックされているかチェック
         if login_attempt.attempts >= 10:
             # アカウントがロックされている場合はエラーを発生
-            raise ValidationError('このアカウントはロックされています。')
-        
+            raise ValidationError("このアカウントはロックされています。")
+
         # パスワードの検証
         if user.check_password(password):
             # ログイン成功
