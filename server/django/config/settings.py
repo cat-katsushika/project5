@@ -128,6 +128,11 @@ USE_TZ = False
 
 STATIC_URL = env.str("DJANGO_STATIC_URL", default="static/")
 STATIC_ROOT = env.str("DJANGO_STATIC_ROOT", default=BASE_DIR / "static")
+STATICFILES_DIRS = [
+    ("favicon", BASE_DIR / "staticfiles"),
+]
+
+
 MEDIA_URL = env.str("DJANGO_MEDIA_URL", default="media/")
 MEDIA_ROOT = env.str("DJANGO_MEDIA_ROOT", default=BASE_DIR / "media")
 # Default primary key field type
