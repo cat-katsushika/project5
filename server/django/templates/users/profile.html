@@ -15,23 +15,25 @@
         <h3 class="fw-normal text-muted mb-3">総継続達成金額: {{ total_fine_done }}円</h3>
         <h3 class="fw-normal text-muted mb-3">現在挑戦中金額: {{ total_fine_in_progress }}円</h3>
         <h3 class="fw-normal text-muted mb-3">総継続失敗額: {{ total_fine_failed }}円</h3>
-        <a
-            href="{% url 'users:change_username' %}"
-            class="btn btn-secondary"
-        >
-            ユーザー名を変更する
-        </a>
-        <a
-            href="{% url 'users:deactivate_confirm'%}"
-            class="btn btn-danger"
-        >
-        アカウントを削除する
-        </a>
+        {% if request.user == profile %}
+            <a
+                href="{% url 'users:change_username' %}"
+                class="btn btn-secondary"
+            >
+                ユーザー名を変更する
+            </a>
+            <a
+                href="{% url 'users:deactivate_confirm'%}"
+                class="btn btn-danger"
+            >
+            アカウントを削除する
+            </a>
+        {% endif %}
 
     </div>
 </div>
 
-<h2>今日のタスク</h2>
+<h2>今日 {{ today }} のタスク</h2>
 {% for todo in todo_list_today %}
 <div class="card shadow-sm">
     <h5 class="card-header">{{ todo.task.fine }}円</h5>
@@ -73,7 +75,7 @@
 <p></p>
 {% endif %}
 
-<h2>明日のタスク</h2>
+<h2>明日 {{ tomorrow }} のタスク</h2>
 {% for todo in todo_list_tomorrow %}
 <div class="card shadow-sm">
     <h5 class="card-header">{{ todo.task.fine }}円</h5>
