@@ -125,6 +125,9 @@ class UserProfileView(TemplateView):
         context["in_progress_tasks"] = in_progress_tasks
         context["failed_tasks"] = failed_tasks
 
+        context["today"] = datetime.now().date()
+        context["tomorrow"] = datetime.now().date() + timedelta(days=1)
+
         return context
 
 
