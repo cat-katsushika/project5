@@ -43,7 +43,8 @@
                 </div>
             {% endfor %}
         {% endif %}
-        <div id="usernameHelp" class="form-text">ユーザーネームを入力してください．</div>
+        <div id="usernameHelp" class="form-text">ユーザー名を入力してください．</div>
+        <div id="usernameHelp" class="form-text">ユーザー名は後から変更できます．</div>
         <div id="usernameHelp" class="form-text">{{ form.username.help_text }}</div>
     </div>
     <div class="mb-3">
@@ -104,6 +105,9 @@
         {% endif %}
     </div>
     <p></p>
+    <p class="text-secondary">※ユーザー名，パスワードはログインに必要な情報です．忘れないようにしてください．<br>
+    パスワードを忘れてしまった場合，お問い合わせをいただいても，そのアカウントの本人と確認できる手段(アカウントに紐づけられたメールアドレス等)がないため，
+    アカウントへの再ログイン，継続中のタスクを中断する等の対応はできません．</p>
 
     <button type="submit" class="btn btn-primary">新規登録</button>
 </form>
