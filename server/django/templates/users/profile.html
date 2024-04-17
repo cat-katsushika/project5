@@ -39,22 +39,30 @@
     <h5 class="card-header">{{ todo.task.fine }}円</h5>
     <div class="card-body">
         <h5 class="card-title">{{ todo.task.title }}</h5>
-        <a class="btn btn-secondary disabled" role="button" aria-disabled="true">{{ todo.date|days_diff:todo.task.created_at }}</a>
-        <a href="{% url 'tasks:task_detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
-        {% if user == todo.task.user %}
-            {% if todo.status == "I" %}
-            <button
-                data-button="when-done"
-                data-url="{% url 'tasks:todo_done' todo.id %}"
-                name="{{ todo.id}}"
-                class="btn btn-secondary"
-            >
-                達成したらクリック
-            </button>
-            {% elif todo.status == "D" %}
-            <a class="btn btn-success disabled" role="button" aria-disabled="true">達成済み</a>
+        <div class="row g-1 row-cols-auto ">
+            <div class="col">
+                <a class="btn btn-secondary disabled" role="button" aria-disabled="true">{{ todo.date|days_diff:todo.task.created_at }}</a>
+            </div>
+            <div class="col">
+                <a href="{% url 'tasks:task_detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
+            </div>
+            {% if user == todo.task.user %}
+                <div class="col">
+                    {% if todo.status == "I" %}
+                    <button
+                        data-button="when-done"
+                        data-url="{% url 'tasks:todo_done' todo.id %}"
+                        name="{{ todo.id}}"
+                        class="btn btn-secondary"
+                    >
+                        達成したらクリック
+                    </button>
+                    {% elif todo.status == "D" %}
+                    <a class="btn btn-success disabled" role="button" aria-disabled="true">達成済み</a>
+                    {% endif %}
+                </div>
             {% endif %}
-        {% endif %}
+        </div>
     </div>
 </div>
 <p></p>
