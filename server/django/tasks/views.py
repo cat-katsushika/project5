@@ -16,6 +16,7 @@ from payments.models import Payment
 
 from .forms import TaskForm
 from .models import RegularExecutionLog, Task, Todo
+from .utils import send_slack_message
 
 
 class TaskFormView(FormView):
@@ -133,5 +134,7 @@ def regular_execution_view(request):
     logs = RegularExecutionLog.objects.all()
     if logs.count() > 1000:
         logs.order_by("created_at").first().delete()
+
+    send_slack_message()
 
     return JsonResponse({"message": "success"})

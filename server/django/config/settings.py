@@ -156,3 +156,5 @@ CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=[])
 
 AXES_FAILURE_LIMIT = 10  # ログイン失敗回数の上限
 AXES_RESET_ON_SUCCESS = True  # ログイン成功時に失敗回数をリセット
+
+SLACK_API_TOKEN = env("SLACK_API_TOKEN")
