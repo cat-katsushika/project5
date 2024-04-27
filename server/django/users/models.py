@@ -1,19 +1,17 @@
 import uuid
 
 from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.core.validators import RegexValidator
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
 class User(AbstractUser):
-
     username_validator = RegexValidator(
-        regex=r'^[a-zA-Z0-9.@+-]+$',
-        message=_("ユーザー名には半角アルファベット、半角数字、および@/./+/-/_のみ使用できます。")
+        regex=r"^[a-zA-Z0-9.@+-]+$", message=_("ユーザー名には半角アルファベット、半角数字、および@/./+/-/_のみ使用できます。")
     )
-    
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(
         _("username"),
