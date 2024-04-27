@@ -57,4 +57,7 @@ def send_slack_message():
     }
 
     # POSTリクエストを送信
-    requests.post(url, headers=headers, data=data)
+    try:
+        requests.post(url, headers=headers, data=data, timeout=10)
+    except:
+        pass
