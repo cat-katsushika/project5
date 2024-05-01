@@ -16,6 +16,7 @@ from django.views.generic.edit import UpdateView
 from tasks.models import Task, Todo
 
 from .forms import AdminOneTimePasswordForm, SignUpForm, UsernameChangeForm
+from .utils import generate_random_string, is_unique_username
 
 User = get_user_model()
 
@@ -159,9 +160,17 @@ class UserDeactivateConfirmView(TemplateView):
 @login_required
 def deactivate_account_view(request):
     user = request.user
-    user.username = "削除されたユーザー" + "-" + str(user.id)
-    user.is_active = False
-    user.save()
+
+    # 削除ユーザー用のユーザー名に変更
+    unique = False
+    while not unique:
+        random_string = generate_random_string()
+        new_username = f"D_{random_string}"
+        if is_unique_username(new_username):
+            user.username = new_username
+            user.is_active = False
+            user.save()
+            unique = True
 
     tasks = Task.objects.filter(user=user)
     for task in tasks:

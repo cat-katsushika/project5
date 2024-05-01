@@ -18,14 +18,17 @@
     <div class="p-5 bg-light">
         <h2 class="fw-bold">アカウントを削除するとどうなるか</h2>
         <p class="fs-5">今後このアカウントにログインすることができなくなります．</p>
-        <p class="fs-5">ユーザー名が「削除されたユーザー + 一意の文字列」，タスク名が「削除されたユーザーのタスク」となり，罰金額のデータはサイト上に残ります．</p>
+        <p class="fs-5">ユーザー名が「D_ + 一意の文字列」，タスク名が「削除されたユーザーのタスク」となり，罰金額のデータはサイト上に残ります．</p>
         <p class="fs-5">現在継続中のタスク(7日間の継続を達成できていタスク)は継続失敗とみなされ，罰金額が引き落とされます．</p>
     </div>
 </div>
-
-<div class="text-center">
-    <a href="{% url 'users:profile' request.user.id %}" class="btn btn-secondary">アカウントを削除しない</a>
-    <a href="{% url 'users:deactivate' %}" class="btn btn-danger">アカウントを削除する</a>
+<div class="row g-1 row-cols-auto justify-content-center">
+    <div class="col">
+        <a href="{% url 'users:profile' request.user.id %}" class="btn btn-secondary">アカウントを削除しない</a>
+    </div>
+    <div class="col">
+        <a href="{% url 'users:deactivate' %}" class="btn btn-danger">アカウントを削除する</a>
+    </div>
 </div>
 
 
