@@ -6,6 +6,8 @@ class Contact(models.Model):
     email = models.EmailField()
     message = models.TextField()
     memo = models.TextField("運営者用メモ欄", blank=True)
+    is_resolved = models.BooleanField("解決済み", default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

@@ -12,7 +12,10 @@ from users.models import User
 def send_slack_message():
     now = datetime.datetime.now()
     now = now.strftime("%Y-%m-%d %H:%M:%S")
-    contact_count = Contact.objects.count()
+
+    contacts = Contact.objects.all()
+    contact_count = contacts.count()
+    contact_is_not_resolved_count = contacts.filter(is_resolved=False).count()
     user_count = User.objects.count()
     tasks = Task.objects.all()
     task_in_progress_count = tasks.filter(status=Task.IN_PROGRESS).count()
@@ -35,6 +38,7 @@ def send_slack_message():
         f"現在時刻:{now}",
         "=== 継続or罰金 定期報告 ===",
         f"問い合わせ数　　　　: {contact_count}",
+        f"　未解決問い合わせ数: {contact_is_not_resolved_count}",
         f"ユーザー数　　　　　: {user_count}",
         f"総タスク数　　　　　: {tasks.count()}",
         f"　完了タスク数　　　: {task_done_count}",
