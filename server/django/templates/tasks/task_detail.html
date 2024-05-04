@@ -29,16 +29,18 @@
 
         <div class="row g-1 row-cols-auto justify-content-center">
             {% if request.user.is_authenticated %}
-                <div class="col">
-                    <a
-                        href="{% url 'users:profile' request.user.id %}"
-                        class="btn btn-secondary"
-                    >
-                        マイページへ
-                    </a>
-                </div>
+            <div class="col">
+                <a
+                    href="{% url 'users:profile' request.user.id %}"
+                    class="btn btn-secondary"
+                >
+                    マイページへ
+                </a>
+            </div>
             {% endif %}
-
+            <div class="col">
+                <button type="button" class="btn btn-outline-dark" id="ToastBtnForUrl">シェア用にURLをコピー</button>
+            </div>
             <div class="col">
                 <a
                     href="{% url 'users:profile' task.user.id %}"
@@ -46,10 +48,6 @@
                 >
                     このユーザーのマイページへ
                 </a>
-            </div>
-
-            <div class="col">
-                <button type="button" class="btn btn-secondary" id="ToastBtnForUrl">シェア用にURLをコピー</button>
             </div>
         </div>
     </div>
