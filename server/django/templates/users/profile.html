@@ -96,11 +96,19 @@
     <h5 class="card-header">{{ todo.task.fine }}円</h5>
     <div class="card-body">
         <h5 class="card-title">{{ todo.task.title }}</h5>
-        <a class="btn btn-secondary disabled" role="button" aria-disabled="true">{{ todo.date|days_diff:todo.task.created_at }}</a>
-        <a href="{% url 'tasks:task_detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
-        {% if user == todo.task.user %}
-        <a class="btn btn-secondary disabled" role="button" aria-disabled="true">明日のタスクです</a>
-        {% endif %}
+        <div class="row g-1 row-cols-auto ">
+            <div class="col">
+                <a class="btn btn-secondary disabled" role="button" aria-disabled="true">{{ todo.date|days_diff:todo.task.created_at }}</a>
+            </div>
+            <div class="col">
+                <a href="{% url 'tasks:task_detail' todo.task.id %}" class="btn btn-secondary" >タスクの詳細</a>
+            </div>
+            {% if user == todo.task.user %}
+                <div class="col">
+                    <a class="btn btn-secondary disabled" role="button" aria-disabled="true">明日のタスクです</a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 <p></p>
