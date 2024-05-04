@@ -13,9 +13,22 @@
                     ようこそ
                 </h1>
                 <h3 class="fw-normal text-muted mb-3 text-center">このサイトは「継続すること」を支援するために作られました</h3>
+                <div class="row g-1 row-cols-auto justify-content-center mt-3">
+                    {% if request.user.is_authenticated %}
+                        <div class="col">
+                            <a
+                                href="{% url 'users:profile' request.user.id %}"
+                                class="btn btn-secondary"
+                            >
+                                マイページへ
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
+
 
     <div class="container mt-5">
         <div class="p-4 p-lg-5 bg-light">
@@ -38,7 +51,7 @@
             <!-- 総継続達成金額 -->
             <div class="col-md-4">
                 <div class="card mb-3">
-                    <div class="card-header">継続達成総額</div>
+                    <div class="card-header">みんなの継続達成総額</div>
                     <div class="card-body">
                         <h5 class="card-title text-success">{{ total_fine_done }}</h5>
                     </div>
@@ -48,7 +61,7 @@
             <!-- 総現在挑戦中金額 -->
             <div class="col-md-4">
                 <div class="card mb-3">
-                    <div class="card-header">現在挑戦中総額</div>
+                    <div class="card-header">みんなの現在挑戦中総額</div>
                     <div class="card-body">
                         <h5 class="card-title">{{ total_fine_in_progress }}</h5>
                     </div>
@@ -58,7 +71,7 @@
             <!-- 総継続失敗額 -->
             <div class="col-md-4">
                 <div class="card mb-3">
-                    <div class="card-header">継続失敗総額</div>
+                    <div class="card-header">みんなの継続失敗総額</div>
                     <div class="card-body">
                         <h5 class="card-title text-danger">{{ total_fine_failed }}</h5>
                     </div>
@@ -68,7 +81,7 @@
     </div>
 
     <div class="container mt-5">
-        <h2 class="mb-4">タスク(一部)</h2>
+        <h2 class="mb-4">みんなのタスク(一部)</h2>
         <div class="row">
             <!-- 最近作られたタスク5個 -->
             <div class="col-md-4 pb-3">

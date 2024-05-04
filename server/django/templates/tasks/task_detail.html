@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load datetime_filters %}
 
 
@@ -22,14 +23,36 @@
             {% endif %}
         </h1>
         <h3 class="fw-normal text-muted mb-3">
-            <a href="{% url 'users:profile' task.user.id %}" class="text-secondary">
-                ユーザー: {{ task.user.username }}
-            </a>
+            ユーザー: {{ task.user.username }}
         </h3>
         <h3 class="fw-normal text-muted mb-3">罰金額: {{ task.fine }}円</h3>
+
+        <div class="row g-1 row-cols-auto justify-content-center">
+            {% if request.user.is_authenticated %}
+                <div class="col">
+                    <a
+                        href="{% url 'users:profile' request.user.id %}"
+                        class="btn btn-secondary"
+                    >
+                        マイページへ
+                    </a>
+                </div>
+            {% endif %}
+
+            <div class="col">
+                <a
+                    href="{% url 'users:profile' task.user.id %}"
+                    class="btn btn-secondary"
+                >
+                    このユーザーのマイページへ
+                </a>
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-secondary" id="ToastBtnForUrl">シェア用にURLをコピー</button>
+            </div>
+        </div>
     </div>
-    <div class="product-device shadow-sm d-none d-md-block"></div>
-    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </div>
 
 <p></p>
@@ -56,4 +79,24 @@
     {% empty %}
     {% endfor %}
 </ol>
+
+<!-- URLコピー時のトースト -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastForUrl" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+        <img src="{% static 'favicon/favicon.png' %}" class="rounded me-2" alt="継続or罰金のファビコン" width="20" height="20">
+        <strong class="me-auto">継続or罰金</strong>
+        <small>now</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <div id="myMessage">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
+    </div>
+</div>
+<!-- URLコピー時のトースト -->
+
+{% include 'tasks/copy_url_script.html' %}
 {% endblock content %}

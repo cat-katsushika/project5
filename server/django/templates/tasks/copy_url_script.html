@@ -1,0 +1,19 @@
+<script>
+
+const toastTrigger = document.getElementById('ToastBtnForUrl')
+const toastForUrl = document.getElementById('toastForUrl')
+const toastMessage = document.getElementById('myMessage')
+
+if (toastTrigger) {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastForUrl)
+    toastTrigger.addEventListener('click', () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            toastMessage.innerHTML = 'URLをコピーしました';
+        }).catch(() => {
+            toastMessage.innerHTML = 'URLのコピーに失敗しました';
+        });
+        toastBootstrap.show()
+    })
+}
+</script>

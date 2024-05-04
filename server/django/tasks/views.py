@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from payments.models import Payment
+from payments.utils import cancel_authorization
 
 from .forms import TaskForm
 from .models import RegularExecutionLog, Task, Todo
@@ -90,6 +91,9 @@ def todo_done_view(request, pk):
     if completed_todo_count == 5:
         todo.task.status = Task.DONE
         todo.task.save()
+
+        # オーソリのキャンセル
+        cancel_authorization(todo.task.id)
 
     response_data = {"todo_id": todo.id}
 
