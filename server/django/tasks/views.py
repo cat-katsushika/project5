@@ -131,8 +131,6 @@ def regular_execution_view(request):
             stripe.api_key = settings.STRIPE_SECRET_KEY
             stripe.PaymentIntent.capture(payment.payment_intent_id)
 
-    # 未開始タスクの削除
-    Task.objects.filter(status=Task.NOT_STARTED).delete()
 
     RegularExecutionLog.objects.create(status=RegularExecutionLog.SUCCESS)
     logs = RegularExecutionLog.objects.all()
