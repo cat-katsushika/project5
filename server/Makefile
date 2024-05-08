@@ -15,25 +15,37 @@ dev:
 down:
 	docker compose -f docker-compose-dev.yml down
 
+.PHONY: blueup
+blueup:
+	docker compose -f docker-compose-dev.yml up -d --no-deps --build django-blue
+
+.PHONY: greenup
+greenup:
+	docker compose -f docker-compose-dev.yml up -d --no-deps --build django-green
+
+.PHONY: greenstop
+greenstop:
+	docker compose -f docker-compose-dev.yml stop django-green
+
 .PHONY: logs
 logs:
 	docker compose -f docker-compose-dev.yml logs -f
 
 .PHONY: test
 test:
-	docker compose -f docker-compose-dev.yml exec django python manage.py test
+	docker compose -f docker-compose-dev.yml exec django-green python manage.py test
 
 .PHONY: black
 black:
-	docker compose -f docker-compose-dev.yml exec django black .
+	docker compose -f docker-compose-dev.yml exec django-green black .
 
 .PHONY: isort
 isort:
-	docker compose -f docker-compose-dev.yml exec django isort .
+	docker compose -f docker-compose-dev.yml exec django-green isort .
 
 .PHONY: flake8
 flake8:
-	docker compose -f docker-compose-dev.yml exec django flake8 .
+	docker compose -f docker-compose-dev.yml exec django-green flake8 .
 
 .PHONY: lint
 lint:
@@ -41,9 +53,9 @@ lint:
 	@make isort
 	@make flake8
 
-.PHONY: exec
-exec:
-	docker compose -f docker-compose-dev.yml exec django bash
+.PHONY: execblue
+execblue:
+	docker compose -f docker-compose-dev.yml exec django-blue bash
 
 .PHONY: delete
 delete:
@@ -69,10 +81,24 @@ proddown:
 	docker compose -f docker-compose-prod.yml down
 
 
+.PHONY: prodblueup
+prodblueup:
+	docker compose -f docker-compose-prod.yml up -d --no-deps --build django-blue
+
+.PHONY: prodgreenup
+prodgreenup:
+	docker compose -f docker-compose-prod.yml up -d --no-deps --build django-green
+
+.PHONY: prodgreenstop
+prodgreenstop:
+	docker compose -f docker-compose-prod.yml stop django-green
+
+
 .PHONY: prodlogs
 prodlogs:
 	docker compose -f docker-compose-prod.yml logs -f
 
-.PHONY: prodexec
+.PHONY: prodexecblue
 prodexec:
-	docker compose -f docker-compose-prod.yml exec django bash
+	docker compose -f docker-compose-prod.yml exec django-blue bash
+

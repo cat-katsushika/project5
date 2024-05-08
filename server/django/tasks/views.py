@@ -131,7 +131,6 @@ def regular_execution_view(request):
             stripe.api_key = settings.STRIPE_SECRET_KEY
             stripe.PaymentIntent.capture(payment.payment_intent_id)
 
-
     RegularExecutionLog.objects.create(status=RegularExecutionLog.SUCCESS)
     logs = RegularExecutionLog.objects.all()
     if logs.count() > 1000:
