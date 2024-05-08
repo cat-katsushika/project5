@@ -1,8 +1,4 @@
-# docker compose fileのバージョン
-version: '3.8'
-
 services:
-
 # データベース用のコンテナ
   postgres:
     image: postgres:14
@@ -19,16 +15,36 @@ services:
     networks:
       - webnet
   
-  django:
+  django-blue:
     build:
       context: ./django
       dockerfile: Dockerfile.django.dev
-    container_name: django
     command: ['bash', '-c', 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000']
+    environment:
+      - DJANGO_ENV_COLOR=blue
     env_file:
       - .env
     ports:
       - 8000:8000
+    volumes:
+      - ./django:/django
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - webnet
+
+  django-green:
+    build:
+      context: ./django
+      dockerfile: Dockerfile.django.dev
+    command: ['bash', '-c', 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000']
+    environment:
+      - DJANGO_ENV_COLOR=green
+    env_file:
+      - .env
+    ports:
+      - 8001:8000
     volumes:
       - ./django:/django
     depends_on:

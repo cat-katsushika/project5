@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
@@ -21,3 +22,11 @@ class ContactSuccessView(TemplateView):
 
 class NoticeView(TemplateView):
     template_name = "contacts/notice.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        color = settings.DJANGO_ENV_COLOR
+        context["env_color"] = (
+            "text-bg-primary" if color == "blue" else "text-bg-success" if color == "green" else "text-bg-danger"
+        )
+        return context

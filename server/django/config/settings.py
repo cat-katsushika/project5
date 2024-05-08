@@ -158,3 +158,5 @@ AXES_FAILURE_LIMIT = 10  # ログイン失敗回数の上限
 AXES_RESET_ON_SUCCESS = True  # ログイン成功時に失敗回数をリセット
 
 SLACK_API_TOKEN = env("SLACK_API_TOKEN")
+
+DJANGO_ENV_COLOR = env("DJANGO_ENV_COLOR", default="red")
