@@ -124,6 +124,6 @@ prodlogsgreen:
 	docker compose -f docker-compose-prod.yml logs -f django-green
 
 .PHONY: prodexecblue
-prodexec:
+prodexecblue:
 	docker compose -f docker-compose-prod.yml exec django-blue bash
 
