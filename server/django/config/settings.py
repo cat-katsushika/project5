@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     # Third party
     "rest_framework",
     "axes",
+    "django_recaptcha",
     # Original apps
     "users",
     "tasks",
@@ -160,3 +161,7 @@ AXES_RESET_ON_SUCCESS = True  # ログイン成功時に失敗回数をリセッ
 SLACK_API_TOKEN = env("SLACK_API_TOKEN")
 
 DJANGO_ENV_COLOR = env("DJANGO_ENV_COLOR", default="red")
+
+# for django-recaptcha
+RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
