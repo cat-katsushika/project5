@@ -26,8 +26,8 @@ services:
       - .env
     ports:
       - 8000:8000
-    volumes:
-      - ./django:/django
+    # volumes: 
+    #   - ./django:/django これをすると，現在動いているやつで使用していないモジュールを使ったものとかをgit pullすると，現在動いてるのがblueもgreenも落ちる
     depends_on:
       postgres:
         condition: service_healthy
@@ -44,8 +44,6 @@ services:
       - .env
     ports:
       - 8001:8000
-    volumes:
-      - ./django:/django
     depends_on:
       postgres:
         condition: service_healthy
