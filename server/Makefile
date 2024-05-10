@@ -19,6 +19,10 @@ down:
 blueup:
 	docker compose -f docker-compose-dev.yml up -d --no-deps --build django-blue
 
+.PHONY: bluestop
+bluestop:
+	docker compose -f docker-compose-dev.yml stop django-blue
+
 .PHONY: greenup
 greenup:
 	docker compose -f docker-compose-dev.yml up -d --no-deps --build django-green
@@ -30,6 +34,15 @@ greenstop:
 .PHONY: logs
 logs:
 	docker compose -f docker-compose-dev.yml logs -f
+
+.PHONY: logsblue
+logsblue:
+	docker compose -f docker-compose-dev.yml logs -f django-blue
+
+
+.PHONY: logsgreen
+logsgreen:
+	docker compose -f docker-compose-dev.yml logs -f django-green
 
 .PHONY: test
 test:
@@ -85,6 +98,10 @@ proddown:
 prodblueup:
 	docker compose -f docker-compose-prod.yml up -d --no-deps --build django-blue
 
+.PHONY: prodbluestop
+prodbluestop:
+	docker compose -f docker-compose-prod.yml stop django-blue
+
 .PHONY: prodgreenup
 prodgreenup:
 	docker compose -f docker-compose-prod.yml up -d --no-deps --build django-green
@@ -97,6 +114,14 @@ prodgreenstop:
 .PHONY: prodlogs
 prodlogs:
 	docker compose -f docker-compose-prod.yml logs -f
+
+.PHONY: prodlogsblue
+prodlogsblue:
+	docker compose -f docker-compose-prod.yml logs -f django-blue
+
+.PHONY: prodlogsgreen
+prodlogsgreen:
+	docker compose -f docker-compose-prod.yml logs -f django-green
 
 .PHONY: prodexecblue
 prodexec:
