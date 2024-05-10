@@ -5,6 +5,9 @@ from django.views.generic.edit import FormView
 
 from .forms import ContactForm
 
+import numpy as np
+
+aaa = np.pi
 
 class ContactFormView(FormView):
     template_name = "contacts/contact.html"
