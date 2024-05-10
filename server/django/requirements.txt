@@ -11,3 +11,4 @@ stripe>=5.0.0
 gunicorn==21.2.0
 pyotp==2.9.0
 django-axes==6.4.0 # ip blocking
+django-recaptcha==4.0.0
