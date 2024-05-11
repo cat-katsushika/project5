@@ -34,6 +34,12 @@ class TaskFormView(FormView):
 class TaskConfirmView(TemplateView):
     template_name = "tasks/task_confirm.html"
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if context["form_data"] == {}:
+            return redirect("tasks:task_form")
+        return self.render_to_response(context)
+
     def post(self, request, *args, **kwargs):
         # セッションからフォームデータを取得し、処理を行う
         form_data = request.session.pop("task_form_data", None)
