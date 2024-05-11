@@ -16,9 +16,10 @@
             <span class="badge text-bg-success">完了</span>
         </h1>
         <h3 class="fw-normal text-muted mb-3">
-            <a href="{% url 'tasks:task_detail' task.id %}" class="text-secondary">
-                タスク: {{ task.title }}
-            </a>
+            ユーザー: {{ task.user.username }}
+        </h3>
+        <h3 class="fw-normal text-muted mb-3">
+            タスク: {{ task.title }}
         </h3>
         <h3 class="fw-normal text-muted mb-3">
             罰金額: {{ task.fine }}円
@@ -26,9 +27,27 @@
         <h3 class="fw-normal text-muted mb-3">
             5日間の継続を目指しましょう!
         </h3>
+
+        <div class="row g-1 row-cols-auto justify-content-center">
+            <div class="col">
+                <a
+                    href="{% url 'tasks:task_detail' task.id %}"
+                    class="btn btn-secondary"
+                >
+                    タスクの詳細ページへ
+                </a>
+            </div>
+            <div class="col">
+                <a
+                    href="{% url 'users:profile' task.user.id %}"
+                    class="btn btn-secondary"
+                >
+                    マイページへ
+                </a>
+            </div> 
+        </div>
+        
     </div>
-    <div class="product-device shadow-sm d-none d-md-block"></div>
-    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </div>
 
 {% endblock content %}
