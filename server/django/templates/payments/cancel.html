@@ -12,13 +12,19 @@
             <span class="badge text-bg-danger">失敗</span>
         </h1>
         <h3 class="fw-normal text-muted mb-3">
-            <a href="{% url 'tasks:task_form' %}" class="text-secondary">
-                タスクを作り直すところからやり直す必要があります
-            </a>
+            タスクを作り直すところからやり直す必要があります
         </h3>
+        <div class="row g-1 row-cols-auto justify-content-center">
+            <div class="col">
+                <a
+                    href="{% url 'tasks:task_form' %}"
+                    class="btn btn-secondary"
+                >
+                    タスクの作成へ
+                </a>
+            </div>
+        </div>
     </div>
-    <div class="product-device shadow-sm d-none d-md-block"></div>
-    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </div>
 
 {% endblock content %}
