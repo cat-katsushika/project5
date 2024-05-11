@@ -102,6 +102,10 @@ class PaymentCancelView(TemplateView):
 
         if not Payment.objects.filter(task=task).exists():
             return redirect("users:home")
+        
+        # タスクがNot_Started以外の場合はタスクを削除しない
+        if task.status != Task.NOT_STARTED:
+            return redirect("users:home")
 
         task.delete()
         return super().get(request, *args, **kwargs)
