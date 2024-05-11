@@ -84,10 +84,10 @@ prod-build:
 prod-up-d:
 	docker compose -f docker-compose-prod.yml up -d
 
-.PHONY: prod
-prod:
-	@make prod-build
-	@make prod-up-d
+# .PHONY: prod
+# prod:
+# 	@make prod-build
+# 	@make prod-up-d
 
 .PHONY: proddown
 proddown:
