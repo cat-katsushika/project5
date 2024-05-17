@@ -4,8 +4,19 @@
 
 
 {% block title %}
-タスク新規作成
+{{ task.title }} | 継続or罰金
 {% endblock title %}
+
+{% block ogp %}
+<meta property="og:title" content="{{ task.title }} | 継続or罰金" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:image" content="https://keizokuorbakkin.com{{ task_ogp_img.image.url }}" />
+<meta property="og:description" content="継続に失敗するとお金が引き落とされます" />
+<meta property="og:site_name" content="継続or罰金" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image">
+{% endblock ogp %}
 
 {% block content %}
 <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">

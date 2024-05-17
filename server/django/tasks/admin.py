@@ -37,3 +37,8 @@ class TodoAdmin(admin.ModelAdmin):
 @admin.register(models.RegularExecutionLog)
 class RegularExecutionLogAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.TaskOgpImage)
+class TaskOgpImageAdmin(admin.ModelAdmin):
+    pass

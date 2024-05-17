@@ -17,7 +17,7 @@ from payments.utils import cancel_authorization
 
 from .forms import TaskForm
 from .models import RegularExecutionLog, Task, Todo
-from .utils import send_slack_message
+from .utils import create_task_detail_ogp_image, send_slack_message
 
 
 class TaskFormView(FormView):
@@ -69,6 +69,8 @@ class TaskDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         task = get_object_or_404(Task, pk=kwargs["pk"])
+        task_ogp_img = create_task_detail_ogp_image(task)
+        context["task_ogp_img"] = task_ogp_img
         context["task"] = task
         context["todo_list"] = Todo.objects.filter(task=task).order_by("date")
         return context

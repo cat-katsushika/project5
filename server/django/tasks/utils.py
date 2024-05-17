@@ -1,11 +1,15 @@
 import datetime
+import io
 
 import requests
+from PIL import Image, ImageDraw, ImageFont
 
 from contacts.models import Contact
 from django.conf import settings
+from django.contrib.staticfiles import finders
+from django.core.files import File
 from django.db.models import Sum
-from tasks.models import Task
+from tasks.models import Task, TaskOgpImage
 from users.models import User
 
 
@@ -62,3 +66,90 @@ def send_slack_message():
     }
     # POSTリクエストを送信
     requests.post(url, headers=headers, data=data, timeout=10)
+
+
+def create_task_detail_ogp_image(task):
+    task_ogp_image = TaskOgpImage.objects.filter(task=task).first()
+    if task_ogp_image:
+        return task_ogp_image
+
+    file_path = finders.find("ogp/task_detail.png")
+
+    # ベースの画像が存在しない場合は白背景の画像を生成
+    if file_path:
+        base_img = Image.open(file_path)
+
+    else:
+        width, height = 1200, 630
+        base_img = Image.new("RGB", (width, height), "white")
+
+    font_path = finders.find("fonts/NotoSansJP-Black.ttf")
+
+    created_img = add_centered_text(base_img, task.title, font_path, 64, (32, 32, 32))
+
+    img_byte_arr = io.BytesIO()
+    created_img.save(img_byte_arr, format="PNG")
+    img_byte_arr.seek(0)  # ストリームの位置をリセット
+
+    # ImageFieldに画像ファイルとして保存
+    task_ogp_image = TaskOgpImage(task=task)
+    task_ogp_image.image.save(f"{task.id}_ogp.png", File(img_byte_arr, name=f"{task.id}_ogp.png"))
+    task_ogp_image.save()
+
+    return task_ogp_image
+
+
+def add_centered_text(base_img, text, font_path, font_size, font_color):
+    try:
+        font = ImageFont.truetype(font_path, font_size)
+    except IOError:
+        font = ImageFont.load_default()
+
+    draw = ImageDraw.Draw(base_img)
+
+    max_lines = 4
+    line_spacing = 10
+
+    # 文字がベース画像からはみ出ないように処理
+    max_width = base_img.size[0] - 500
+    lines = []
+    current_line = ""
+
+    for char in text:
+        test_line = current_line + char
+        text_bbox = draw.textbbox((0, 0), test_line, font=font)
+        text_width = text_bbox[2] - text_bbox[0]
+        if text_width <= max_width:
+            current_line = test_line
+        else:
+            lines.append(current_line)
+            current_line = char
+
+    if current_line:
+        lines.append(current_line)
+
+    # 最大行数を超える場合は省略記号を追加
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        last_line = lines[-1]
+        while (
+            draw.textbbox((0, 0), last_line + "...", font=font)[2]
+            - draw.textbbox((0, 0), last_line + "...", font=font)[0]
+            > max_width
+        ):
+            last_line = last_line[:-1]
+        lines[-1] = last_line + "..."
+
+    # 各行の高さを計算して中央揃えで描画
+    line_height = draw.textbbox((0, 0), "あ", font=font)[3] - draw.textbbox((0, 0), "あ", font=font)[1]
+    total_text_height = len(lines) * (line_height + line_spacing) - line_spacing
+    current_y = (base_img.size[1] - total_text_height) / 2 - 30
+
+    for line in lines:
+        text_bbox = draw.textbbox((0, 0), line, font=font)
+        text_width = text_bbox[2] - text_bbox[0]
+        text_x = ((base_img.size[0] - text_width) / 2) - 150
+        draw.text((text_x, current_y), line, fill=font_color, font=font)
+        current_y += line_height + line_spacing  # 行の高さにスペースを追加
+
+    return base_img
