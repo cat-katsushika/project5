@@ -30,6 +30,7 @@ services:
     #   - ./django:/django これをすると，現在動いているやつで使用していないモジュールを使ったものとかをgit pullすると，現在動いてるのがblueもgreenも落ちる
     volumes:
       - ./django/static:/django/static # nginxと連携するために，staticはマウントする
+      - ./django/media:/django/media
     depends_on:
       postgres:
         condition: service_healthy
@@ -48,6 +49,7 @@ services:
       - 8001:8000
     volumes:
       - ./django/static:/django/static
+      - ./django/media:/django/media
     depends_on:
       postgres:
         condition: service_healthy
