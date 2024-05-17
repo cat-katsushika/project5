@@ -130,7 +130,9 @@ USE_TZ = False
 STATIC_URL = env.str("DJANGO_STATIC_URL", default="static/")
 STATIC_ROOT = env.str("DJANGO_STATIC_ROOT", default=BASE_DIR / "static")
 STATICFILES_DIRS = [
-    ("favicon", BASE_DIR / "staticfiles"),
+    ("favicon", BASE_DIR / "staticfiles/favicon"),
+    ("ogp", BASE_DIR / "staticfiles/ogp"),
+    ("fonts", BASE_DIR / "staticfiles/fonts"),
 ]
 
 

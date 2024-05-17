@@ -67,3 +67,16 @@ class RegularExecutionLog(models.Model):
 
     def __str__(self):
         return self.created_at.strftime("%Y/%m/%d %H:%M:%S") + " - " + self.status + " - " + self.message
+
+
+class TaskOgpImage(models.Model):
+    task = models.OneToOneField(Task, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="task_ogp_images/")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.task.title
+
+    def delete(self, *args, **kwargs):
+        self.image.delete()  # This deletes the image file
+        super().delete(*args, **kwargs)
