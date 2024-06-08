@@ -9,11 +9,12 @@ from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.files import File
 from django.db.models import Sum
+from django.templatetags.static import static
 from tasks.models import Task, TaskOgpImage
 from users.models import User
 
 
-def send_slack_message():
+def create_daily_log_text():
     now = datetime.datetime.now()
     now = now.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -35,8 +36,6 @@ def send_slack_message():
     total_fine_done = total_fine_done if total_fine_done else 0
     total_fine_failed = total_fine_failed if total_fine_failed else 0
 
-    token = settings.SLACK_API_TOKEN
-    channel = "#継続or罰金"
     text_list = [
         " ============================= ",
         f"現在時刻:{now}",
@@ -54,6 +53,28 @@ def send_slack_message():
     ]
 
     text = "\n".join(text_list)
+
+    return text
+
+
+def send_message_to_discord(text="メッセージの内容が指定されていません", username="継続or罰金", avatar_url=""):
+    # Discordのアイコン画像, べた書きでごめんなさい
+    if avatar_url == "":
+        avatar_url = "https://keizokuorbakkin.com/static/favicon/favicon.png"
+
+    webhook_url = settings.DISCORD_WEBHOOK_URL
+
+    data = {
+        "content": text,
+        "username": username,
+        "avatar_url": avatar_url,
+    }
+    requests.post(webhook_url, data=data)
+
+
+def send_message_to_slack(text="メッセージの内容が指定されていません"):
+    token = settings.SLACK_API_TOKEN
+    channel = "#継続or罰金"
 
     # Slack APIのURL
     url = "https://slack.com/api/chat.postMessage"

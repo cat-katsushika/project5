@@ -17,7 +17,7 @@ from payments.utils import cancel_authorization
 
 from .forms import TaskForm
 from .models import RegularExecutionLog, Task, Todo
-from .utils import create_task_detail_ogp_image, send_slack_message
+from .utils import create_daily_log_text, create_task_detail_ogp_image, send_message_to_discord, send_message_to_slack
 
 
 class TaskFormView(FormView):
@@ -144,6 +144,8 @@ def regular_execution_view(request):
     if logs.count() > 1000:
         logs.order_by("created_at").first().delete()
 
-    send_slack_message()
+    daily_log_text = create_daily_log_text()
+    send_message_to_discord(text=daily_log_text, username="継続or罰金 日次報告", avatar_url="")
+    send_message_to_slack(text=daily_log_text)
 
     return JsonResponse({"message": "success"})
