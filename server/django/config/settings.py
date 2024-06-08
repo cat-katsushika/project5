@@ -162,6 +162,8 @@ AXES_RESET_ON_SUCCESS = True  # ログイン成功時に失敗回数をリセッ
 
 SLACK_API_TOKEN = env("SLACK_API_TOKEN")
 
+DISCORD_WEBHOOK_URL = env("DISCORD_WEBHOOK_URL")
+
 DJANGO_ENV_COLOR = env("DJANGO_ENV_COLOR", default="red")
 
 # for django-recaptcha
