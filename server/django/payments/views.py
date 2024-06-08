@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 from tasks.models import Task
+from tasks.utils import send_message_to_discord
 
 from .models import Payment
 
@@ -84,6 +85,18 @@ class PaymentSuccessView(TemplateView):
         for todo in todos:
             todo.status = todo.IN_PROGRESS
             todo.save()
+
+        # Discordに通知
+        log_message_list = [
+            " ============================= ",
+            "タスクが生成されました",
+            f"ユーザー名: {task.user.username}",
+            f"タスク名　: {task.title}",
+            f"罰金額　　: ¥{task.fine:,.0f}",
+        ]
+        log_message = "\n".join(log_message_list)
+        send_message_to_discord(text=log_message, username="継続or罰金 タスク生成検知", avatar_url="")
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

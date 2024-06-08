@@ -9,7 +9,6 @@ from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.files import File
 from django.db.models import Sum
-from django.templatetags.static import static
 from tasks.models import Task, TaskOgpImage
 from users.models import User
 
