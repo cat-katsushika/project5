@@ -69,7 +69,7 @@ def send_message_to_discord(text="メッセージの内容が指定されてい�
         "username": username,
         "avatar_url": avatar_url,
     }
-    requests.post(webhook_url, data=data)
+    requests.post(webhook_url, data=data, timeout=10)
 
 
 def send_message_to_slack(text="メッセージの内容が指定されていません"):
