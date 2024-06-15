@@ -13,3 +13,4 @@ pyotp==2.9.0
 django-axes==6.4.0 # ip blocking
 django-recaptcha==4.0.0
 pillow==10.3.0
+django-allauth[socialaccount]==0.63.3 # social login

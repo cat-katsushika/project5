@@ -24,7 +24,14 @@ def create_checkout_session_view(request, pk):
     cancel_url = request.build_absolute_uri(relative_cancel_url)
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    # stripeのcheckout sessionのメールを設定，blankはエラーになるためNoneを設定
+    email = task.user.email
+    if not email:
+        email = None
+
     session = stripe.checkout.Session.create(
+        customer_email=email,
         line_items=[
             {
                 "price_data": {
