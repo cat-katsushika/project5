@@ -1,0 +1,56 @@
+{% extends "socialaccount/base_entrance.html" %}
+{% load i18n %}
+{% load allauth %}
+{% block head_title %}
+    {% trans "Sign In" %}
+{% endblock head_title %}
+
+{% block content %}
+    {% if process == "connect" %}
+        {% element h1 %}
+            {% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}
+        {% endelement %}
+        {% element p %}
+            {% blocktrans with provider.name as provider %}You are about to connect a new third-party account from {{ provider }}.{% endblocktrans %}
+        {% endelement %}
+        {% element form method="post" no_visible_fields=True %}
+            {% slot actions %}
+                {% csrf_token %}
+                {% element button type="submit" %}
+                    {% trans "Continue" %}
+                {% endelement %}
+            {% endslot %}
+        {% endelement %}
+    {% else %}
+
+    <div style="height: 56px;"></div>
+
+        <div class="flex-grow-0 flex-shrink-0 container">
+            <div class="row justify-content-md-center">
+                <div class="col col-lg-4">
+                    <div class="bg-white shadow rounded-4">
+                        <div class="p-5">
+                            <h1 class="fw-bold fs-2">
+                                {% blocktrans with provider.name as provider %}
+                                {{ provider }}でログイン
+                                {% endblocktrans %}
+                            </h1>
+                            <p>
+                                {% blocktrans with provider.name as provider %}You are about to sign in using a third-party account from {{ provider }}.{% endblocktrans %}
+                            <p>
+                            {% element form method="post" no_visible_fields=True %}
+                                {% slot actions %}
+                                    {% csrf_token %}
+                                    {% element button type="submit" %}
+                                        {% trans "Continue" %}
+                                    {% endelement %}
+                                {% endslot %}
+                            {% endelement %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}
+

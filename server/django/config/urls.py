@@ -1,3 +1,6 @@
+from allauth.account.views import logout
+from allauth.socialaccount.providers.google.views import oauth2_callback, oauth2_login
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -12,6 +15,9 @@ urlpatterns = [
     path("contacts/", include("contacts.urls")),
     path("payments/", include("payments.urls")),
     path("terms-and-conditions/", include("terms_and_conditions.urls")),
+    path("accounts/logout/", logout, name="account_logout"),
+    path("accounts/google/login/", oauth2_login, name="google_login"),
+    path("accounts/google/login/callback/", oauth2_callback, name="google_callback"),
 ]
 
 if settings.DEBUG:

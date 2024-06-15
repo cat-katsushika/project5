@@ -21,6 +21,7 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesStandaloneBackend",
     "users.backends.LimitLoginBackend",  # カスタム認証バックエンドに変更
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 # Application definition
@@ -37,6 +38,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "axes",
     "django_recaptcha",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     # Original apps
     "users",
     "tasks",
@@ -55,6 +60,7 @@ MIDDLEWARE = [
     "users.middleware.CustomAdminAuthMiddleware",  # Custom middleware
     "axes.middleware.AxesMiddleware",
     "users.middleware.CustomAxesMiddleware",  # Custom middleware
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -62,7 +68,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "templates", BASE_DIR / "templates/allauth"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -169,3 +175,20 @@ DJANGO_ENV_COLOR = env("DJANGO_ENV_COLOR", default="red")
 # for django-recaptcha
 RECAPTCHA_PUBLIC_KEY = env("RECAPTCHA_PUBLIC_KEY")
 RECAPTCHA_PRIVATE_KEY = env("RECAPTCHA_PRIVATE_KEY")
+
+
+SOCIALACCOUNT_PROVICERS = {
+    "google": {
+        "SCOPE": ["email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "OAUTH_PKCE_ENABLED": True,
+    }
+}
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+LOGIN_REDIRECT_URL = "users:home"
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
+SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
