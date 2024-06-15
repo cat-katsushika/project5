@@ -1,50 +1,24 @@
 from datetime import datetime, timedelta
 
 import pyotp
+from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialAccount
 
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
 from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
 from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.edit import UpdateView
 from tasks.models import Task, Todo
 
-from .forms import AdminOneTimePasswordForm, SignUpForm, UsernameChangeForm
+from .forms import AdminOneTimePasswordForm, UsernameChangeForm
 from .utils import generate_random_string, is_unique_username
 
 User = get_user_model()
-
-
-class SignUpView(CreateView):
-    template_name = "users/signup.html"
-    form_class = SignUpForm
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        username = form.cleaned_data.get("username")
-        password = form.cleaned_data.get("password1")
-        user = authenticate(request=self.request, username=username, password=password)
-        login(self.request, user)
-        return response
-
-    def get_success_url(self):
-        # 処理の順番的に，直接プロファイルにリダイレクトできないため，ワンクッション置いている．
-        # form_validでsuper().form_validを最初に呼ぶと，get_success_urlでrequest.userが取得できない．
-        # form_validでsuper().form_validを最後に呼ぶと，ログインができなくなる．
-        return reverse_lazy("users:profile_redirect")
-
-
-class CustomLoginView(LoginView):
-    def get_success_url(self):
-        user = self.request.user
-        # ユーザーのUUIDを使ってプロフィールページのURLを生成
-        return reverse_lazy("users:profile", kwargs={"pk": user.id})
 
 
 class HomePageView(TemplateView):
@@ -177,6 +151,13 @@ def deactivate_account_view(request):
         task.title = "削除されたユーザーのタスク"
         task.save()
 
+    user.email = ""
+    user.first_name = ""
+    user.last_name = ""
+    user.save()
+    SocialAccount.objects.filter(user=user).delete()
+    EmailAddress.objects.filter(user=user).delete()
+
     # ユーザーをログアウトさせる
     logout(request)
 
@@ -188,6 +169,11 @@ def custom_admin_auth_view(request):
     """
     Adminページにワンタイムパスワードを設定するためのカスタム認証ビュー
     """
+    if settings.DEBUG:
+        # DEBUGモードの場合はカスタム認証をスキップ
+        request.session["custom_admin_auth"] = True
+        return redirect("/admin/KOgEdTnMXbsDJa8jK347oaVqVzbshgIfhOWBjim9uEA5RfsEpl/")
+
     if request.method == "POST":
         form = AdminOneTimePasswordForm(request.POST)
 
