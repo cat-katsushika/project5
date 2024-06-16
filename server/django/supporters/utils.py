@@ -1,5 +1,5 @@
 import json
-import random
+import secrets
 
 import requests
 
@@ -14,7 +14,7 @@ def get_random_supporter():
     count = Supporter.objects.aggregate(count=Count("id"))["count"]
     if count == 0:
         return Supporter.objects.create(name="テストサポーター", personality="デバッグ中に生成されたサポーターです。")
-    random_index = random.randint(0, count - 1)
+    random_index = secrets.randbelow(count)  # random.randintの代わりにsecrets.randbelowを使用
     return Supporter.objects.all()[random_index]
 
 
