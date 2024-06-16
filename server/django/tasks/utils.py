@@ -57,6 +57,8 @@ def create_daily_log_text():
 
 
 def send_message_to_discord(text="メッセージの内容が指定されていません", username="継続or罰金", avatar_url=""):
+    if settings.DEBUG:
+        return
     # Discordのアイコン画像, べた書きでごめんなさい
     if avatar_url == "":
         avatar_url = "https://keizokuorbakkin.com/static/favicon/favicon.png"

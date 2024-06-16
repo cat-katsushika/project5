@@ -19,75 +19,126 @@
 {% endblock ogp %}
 
 {% block content %}
-<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-body-tertiary">
-    <div class="col-md-6 p-lg-5 mx-auto my-5">
-        <h1 class="display-3 fw-bold">
-            {{ task.title }}
-            {% if task.status == "N" %}
-            <span class="badge text-bg-primary">未開始</span>
-            {% elif task.status == "I" %}
-            <span class="badge text-bg-secondary">継続中</span>
-            {% elif task.status == "D" %}
-            <span class="badge text-bg-success">達成済み</span>
-            {% elif task.status == "F" %}
-            <span class="badge text-bg-danger">失敗</span>
-            {% endif %}
-        </h1>
-        <h3 class="fw-normal text-muted mb-3">
-            ユーザー: {{ task.user.username }}
-        </h3>
-        <h3 class="fw-normal text-muted mb-3">罰金額: {{ task.fine }}円</h3>
-
-        <div class="row g-1 row-cols-auto justify-content-center">
-            {% if request.user.is_authenticated %}
-            <div class="col">
-                <a
-                    href="{% url 'users:profile' request.user.id %}"
-                    class="btn btn-secondary"
-                >
-                    マイページへ
-                </a>
-            </div>
-            {% endif %}
-            <div class="col">
-                <button type="button" class="btn btn-outline-dark" id="ToastBtnForUrl">シェア用にURLをコピー</button>
-            </div>
-            <div class="col">
-                <a
-                    href="{% url 'users:profile' task.user.id %}"
-                    class="btn btn-secondary"
-                >
-                    このユーザーのマイページへ
-                </a>
+<div class="container">
+    <div class="p-3 p-md-5 bg-body-tertiary text-center">
+        <div class="col-md-6 p-lg-5 mx-auto my-5">
+            <h1 class="display-3 fw-bold">
+                {{ task.title }}
+                {% if task.status == "N" %}
+                <span class="badge text-bg-primary">未開始</span>
+                {% elif task.status == "I" %}
+                <span class="badge text-bg-secondary">継続中</span>
+                {% elif task.status == "D" %}
+                <span class="badge text-bg-success">達成済み</span>
+                {% elif task.status == "F" %}
+                <span class="badge text-bg-danger">失敗</span>
+                {% endif %}
+            </h1>
+            <h3 class="fw-normal text-muted mb-3">
+                ユーザー: {{ task.user.username }}
+            </h3>
+            <h3 class="fw-normal text-muted mb-3">罰金額: {{ task.fine }}円</h3>
+            <div class="row g-1 row-cols-auto justify-content-center">
+                {% if request.user.is_authenticated %}
+                <div class="col">
+                    <a
+                        href="{% url 'users:profile' request.user.id %}"
+                        class="btn btn-secondary"
+                    >
+                        マイページへ
+                    </a>
+                </div>
+                {% endif %}
+                <div class="col">
+                    <button type="button" class="btn btn-outline-dark" id="ToastBtnForUrl">シェア用にURLをコピー</button>
+                </div>
+                <div class="col">
+                    <a
+                        href="{% url 'users:profile' task.user.id %}"
+                        class="btn btn-secondary"
+                    >
+                        このユーザーのマイページへ
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<p></p>
+<!-- 応援者の簡単な情報と応援メッセージを表示したい -->
 
-<ol class="list-group list-group-numbered">
-    {% for todo in todo_list %}
-    <li class="list-group-item d-flex justify-content-between align-items-start">
-        <div class="ms-2 me-auto">
-        <div class="fw-bold">{{ todo.date }} : {{ todo.date|days_diff:todo.task.created_at }}</div>
-            {{ todo.task.title }}
+{% if supporter %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <div class="fw-bold">サポーター</div>
         </div>
-        {% if task.status == "N" %}
-        <span class="badge text-bg-primary">未開始</span>
-        {% elif todo.status == "I" %}
-        <span class="badge text-bg-secondary">挑戦待ち</span>
-        {% elif todo.status == "D" %}
-        <span class="badge text-bg-success">達成済み</span>
-        {% elif todo.status == "F" %}
-        <span class="badge text-bg-danger">失敗</span>
-        {% elif todo.status == "S" %}
-        <span class="badge text-bg-warning">中断</span>
-        {% endif %}
-    </li>
-    {% empty %}
-    {% endfor %}
-</ol>
+        
+        <div class="card-body">
+            <div class="row">
+                <div class="col-2">
+                    <img src="{{ supporter.avatar.url }}" alt="{{ supporter.name }}" class="img-fluid rounded">
+                </div>
+                <div class="col-10 ">
+                    <h5 class="card-title">{{ encouragement_message_day0.title }}</h5>
+                    <div class="card-text">
+                        {{ encouragement_message_day0.message }}
+                    </div>
+                    <div class="text-end fw-bold">サポーター：{{ supporter.name }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container mt-5">
+        {% load custom_tags %}
+        {% for todo in todo_list %}
+        <div class="card">
+            <ol class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">{{ todo.date|days_diff:todo.task.created_at }} : {{ todo.date }}</div>
+                        {{ todo.task.title }}
+                    </div>
+                    {% if task.status == "N" %}
+                    <span class="badge text-bg-primary">未開始</span>
+                    {% elif todo.status == "I" %}
+                    <span class="badge text-bg-secondary">挑戦待ち</span>
+                    {% elif todo.status == "D" %}
+                    <span class="badge text-bg-success">達成済み</span>
+                    {% elif todo.status == "F" %}
+                    <span class="badge text-bg-danger">失敗</span>
+                    {% elif todo.status == "S" %}
+                    <span class="badge text-bg-warning">中断</span>
+                    {% endif %}
+                </li>
+                {% get_dynamic_var "encouragement_message_day" forloop.counter as encouragement_message %}
+                {% if encouragement_message %}
+                <li class="list-group-item">
+                    <div style="height: 10px;"></div>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="{{ supporter.avatar.url }}" alt="{{ supporter.name }}" class="img-fluid rounded">
+                        </div>
+                        <div class="col-10">
+                            <h5 class="card-title">{{ encouragement_message.title }}</h5>
+                            <div class="card=text">
+                                {{ encouragement_message.message }}
+                            </div>
+                            <div class="text-end fw-bold">サポーター：{{ supporter.name }}</div>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+            </ol>
+        </div>
+        <p></p>
+
+        {% empty %}
+        {% endfor %}
+</div>
 
 <!-- URLコピー時のトースト -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
