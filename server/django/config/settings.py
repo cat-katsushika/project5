@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "tasks",
     "contacts",
     "payments",
+    "supporters",
 ]
 
 MIDDLEWARE = [
@@ -192,3 +193,10 @@ SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
+
+
+# 応援メッセージを受けられる閾値罰金額
+SUPPORTER_MESSAGE_THRESHOLD = 500
+
+# DifyのAPIキー
+DIFY_API_KEY = env("DIFY_API_KEY")

@@ -14,6 +14,8 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from payments.models import Payment
 from payments.utils import cancel_authorization
+from supporters.models import EncouragementMessage
+from supporters.utils import create_encouragement_message
 
 from .forms import TaskForm
 from .models import RegularExecutionLog, Task, Todo
@@ -73,6 +75,17 @@ class TaskDetailView(TemplateView):
         context["task_ogp_img"] = task_ogp_img
         context["task"] = task
         context["todo_list"] = Todo.objects.filter(task=task).order_by("date")
+
+        # サポーター関連
+        if task.fine >= int(settings.SUPPORTER_MESSAGE_THRESHOLD):
+            first_encouragement_message = EncouragementMessage.objects.filter(task=task, day_number=0).first()
+            if first_encouragement_message is not None:
+                supporter = first_encouragement_message.supporter
+                context["supporter"] = supporter
+                encouragement_message_list = EncouragementMessage.objects.filter(task=task).order_by("day_number")
+                for message in encouragement_message_list:
+                    context[f"encouragement_message_day{str(message.day_number)}"] = message
+
         return context
 
 
@@ -116,6 +129,10 @@ def todo_done_view(request, pk):
     ]
     log_message = "\n".join(log_message_list)
     send_message_to_discord(text=log_message, username="継続or罰金 タスクTODO達成検知", avatar_url="")
+
+    # サポーター関連
+    if todo.task.fine >= int(settings.SUPPORTER_MESSAGE_THRESHOLD):
+        create_encouragement_message(task_id=str(todo.task.id), day_number=completed_todo_count)
 
     return JsonResponse(response_data)
 
