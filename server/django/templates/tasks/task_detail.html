@@ -71,7 +71,7 @@
 <div class="container mt-5">
     <div class="card">
         <div class="card-header">
-            <div class="fw-bold">サポーター</div>
+            <div class="fw-bold">はじまり</div>
         </div>
         
         <div class="card-body">
@@ -120,14 +120,14 @@
                     <div style="height: 10px;"></div>
                     <div class="row">
                         <div class="col-2">
-                            <img src="{{ supporter.avatar.url }}" alt="{{ supporter.name }}" class="img-fluid rounded">
+                            <img src="{{ encouragement_message.supporter.avatar.url }}" alt="{{ encouragement_message.supporter.name }}" class="img-fluid rounded">
                         </div>
                         <div class="col-10">
                             <h5 class="card-title">{{ encouragement_message.title }}</h5>
                             <div class="card=text">
                                 {{ encouragement_message.message }}
                             </div>
-                            <div class="text-end fw-bold">サポーター：{{ supporter.name }}</div>
+                            <div class="text-end fw-bold">サポーター：{{ encouragement_message.supporter.name }}</div>
                         </div>
                     </div>
                 </li>
