@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load datetime_filters %}
+
+{% block title %}
+{{ user.username}}さんの統計情報
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row g-1">
+        <div class="col-12 col-md">
+            <h1>{{ user.username }}さんの統計情報</h1>
+        </div>
+        <div class="col-12 col-md">
+            <div class="d-flex justify-content-start">
+                <div class="me-2">
+                    <a href="{% url 'users:profile' request.user.id %}" class="btn btn-secondary">
+                        マイページへ
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'users:profile' user.id %}" class="btn btn-secondary">
+                        このユーザーのマイページへ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="container mt-3">
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('myChart');
+
+
+const completed_data = {{ completed_data|safe }}; 
+const failed_data = {{ failed_data|safe }};
+
+const datasets = [
+    {
+        type : 'line',
+        label: '継続達成額',
+        data: completed_data,
+        fill: true,
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        tension: 0.1
+    },
+    {
+        type : 'line',
+        label: '継続失敗額',
+        data: failed_data,
+        fill: true,
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        tension: 0.1
+    },
+];
+
+
+
+new Chart(ctx, {
+    data: {
+        datasets : datasets,
+    },
+    options: {
+        scales: {
+            x: {
+                type: 'linear',
+                position: 'bottom',
+                title: {
+                    display: true,
+                    text: '経過日数　(日)'
+                },
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: '総額　(円)'
+                }
+            }
+        }
+    }
+});
+
+
+
+</script>
+
+
+{% endblock content %}

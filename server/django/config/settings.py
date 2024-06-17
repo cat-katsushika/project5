@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "contacts",
     "payments",
     "supporters",
+    "analytics",
 ]
 
 MIDDLEWARE = [

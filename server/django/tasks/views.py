@@ -118,17 +118,17 @@ def todo_done_view(request, pk):
 
     response_data = {"todo_id": todo.id}
 
-    # Discordに通知
-    log_message_list = [
-        " ============================= ",
-        "順調に継続しているユーザーがいます",
-        f"ユーザー名: {todo.task.user.username}",
-        f"タスク名　: {todo.task.title}",
-        f"罰金額　　: ¥{todo.task.fine:,.0f}",
-        f"完了日数　: {completed_todo_count}日目",
-    ]
-    log_message = "\n".join(log_message_list)
-    send_message_to_discord(text=log_message, username="継続or罰金 タスクTODO達成検知", avatar_url="")
+    # # Discordに通知
+    # log_message_list = [
+    #     " ============================= ",
+    #     "順調に継続しているユーザーがいます",
+    #     f"ユーザー名: {todo.task.user.username}",
+    #     f"タスク名　: {todo.task.title}",
+    #     f"罰金額　　: ¥{todo.task.fine:,.0f}",
+    #     f"完了日数　: {completed_todo_count}日目",
+    # ]
+    # log_message = "\n".join(log_message_list)
+    # send_message_to_discord(text=log_message, username="継続or罰金 タスクTODO達成検知", avatar_url="")
 
     # サポーター関連
     if todo.task.fine >= int(settings.SUPPORTER_MESSAGE_THRESHOLD):
@@ -168,16 +168,16 @@ def regular_execution_view(request):
             stripe.api_key = settings.STRIPE_SECRET_KEY
             stripe.PaymentIntent.capture(payment.payment_intent_id)
 
-        # Discordに通知
-        log_message_list = [
-            " ============================= ",
-            "継続を続けられなかったユーザーがいます",
-            f"ユーザー名: {todo.task.user.username}",
-            f"タスク名　: {todo.task.title}",
-            f"罰金額　　: ¥{todo.task.fine:,.0f}",
-        ]
-        log_message = "\n".join(log_message_list)
-        send_message_to_discord(text=log_message, username="継続or罰金 継続失敗検知", avatar_url="")
+        # # Discordに通知
+        # log_message_list = [
+        #     " ============================= ",
+        #     "継続を続けられなかったユーザーがいます",
+        #     f"ユーザー名: {todo.task.user.username}",
+        #     f"タスク名　: {todo.task.title}",
+        #     f"罰金額　　: ¥{todo.task.fine:,.0f}",
+        # ]
+        # log_message = "\n".join(log_message_list)
+        # send_message_to_discord(text=log_message, username="継続or罰金 継続失敗検知", avatar_url="")
 
     RegularExecutionLog.objects.create(status=RegularExecutionLog.SUCCESS)
     logs = RegularExecutionLog.objects.all()
