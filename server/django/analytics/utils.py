@@ -31,6 +31,9 @@ def generate_fine_data(user_id, is_completed):
 
     result.sort(key=lambda x: x["x"])
 
+    for i in range(1, len(result)):
+        result[i]["y"] += result[i - 1]["y"]
+
     today = datetime.now().date()
     today_diff = today - start_date
     today_diff = today_diff.days
