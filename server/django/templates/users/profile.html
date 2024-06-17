@@ -23,7 +23,7 @@
                             href="{% url 'users:change_username' %}"
                             class="btn btn-secondary"
                         >
-                            ユーザー名を変更する
+                            ユーザー名を変更する...
                         </a>
                     </div>
                     <div class="col">
@@ -31,7 +31,15 @@
                             href="{% url 'users:deactivate_confirm'%}"
                             class="btn btn-danger"
                         >
-                            アカウントを削除する
+                            アカウントを削除する...
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a
+                            href="{% url 'analytics:user_analytics' user.id %}"
+                            class="btn btn-secondary"
+                        >
+                            統計データを見る
                         </a>
                     </div> 
                 </div>
@@ -43,6 +51,14 @@
                         class="btn btn-secondary"
                     >
                         マイページへ
+                    </a>
+                </div>
+                <div class="col">
+                    <a
+                        href="{% url 'analytics:user_analytics' user.id %}"
+                        class="btn btn-secondary"
+                    >
+                        統計データを見る
                     </a>
                 </div>
             </div>
