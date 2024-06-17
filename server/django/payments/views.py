@@ -6,9 +6,11 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from supporters.utils import create_encouragement_message
 from tasks.models import Task
-from tasks.utils import send_message_to_discord
 
 from .models import Payment
+
+# from tasks.utils import send_message_to_discord
+
 
 
 def create_checkout_session_view(request, pk):
@@ -94,16 +96,16 @@ class PaymentSuccessView(TemplateView):
             todo.status = todo.IN_PROGRESS
             todo.save()
 
-        # Discordに通知
-        log_message_list = [
-            " ============================= ",
-            "タスクが生成されました",
-            f"ユーザー名: {task.user.username}",
-            f"タスク名　: {task.title}",
-            f"罰金額　　: ¥{task.fine:,.0f}",
-        ]
-        log_message = "\n".join(log_message_list)
-        send_message_to_discord(text=log_message, username="継続or罰金 タスク生成検知", avatar_url="")
+        # # Discordに通知
+        # log_message_list = [
+        #     " ============================= ",
+        #     "タスクが生成されました",
+        #     f"ユーザー名: {task.user.username}",
+        #     f"タスク名　: {task.title}",
+        #     f"罰金額　　: ¥{task.fine:,.0f}",
+        # ]
+        # log_message = "\n".join(log_message_list)
+        # send_message_to_discord(text=log_message, username="継続or罰金 タスク生成検知", avatar_url="")
 
         if task.fine >= int(settings.SUPPORTER_MESSAGE_THRESHOLD):
             create_encouragement_message(task_id=str(task.id), day_number=0)
