@@ -12,7 +12,6 @@ from .models import Payment
 # from tasks.utils import send_message_to_discord
 
 
-
 def create_checkout_session_view(request, pk):
     task = Task.objects.get(pk=pk)
     if task is None:

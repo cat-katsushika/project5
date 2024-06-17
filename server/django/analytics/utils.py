@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import datetime
 
 from tasks.models import Task
 from users.models import User
@@ -30,7 +31,7 @@ def generate_fine_data(user_id, is_completed):
 
     result.sort(key=lambda x: x["x"])
 
-    today = date.today()
+    today = datetime.now().date()
     today_diff = today - start_date
     today_diff = today_diff.days
     if today_diff not in dd:
