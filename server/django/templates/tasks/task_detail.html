@@ -60,6 +60,14 @@
                         このユーザーのマイページへ
                     </a>
                 </div>
+                <div class="col">
+                    <a
+                        href="{% url 'analytics:user_analytics' task.user.id %}"
+                        class="btn btn-secondary"
+                    >
+                        このユーザーの統計データを見る
+                    </a>
+                </div>
             </div>
         </div>
     </div>
