@@ -14,11 +14,13 @@
         </div>
         <div class="col-12 col-md">
             <div class="d-flex justify-content-start">
+                {% if request.user.is_authenticated %}
                 <div class="me-2">
                     <a href="{% url 'users:profile' request.user.id %}" class="btn btn-secondary">
                         マイページへ
                     </a>
                 </div>
+                {% endif %}
                 <div>
                     <a href="{% url 'users:profile' user.id %}" class="btn btn-secondary">
                         このユーザーのマイページへ
