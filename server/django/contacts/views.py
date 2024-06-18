@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
 from .forms import ContactForm
+from .models import Notice
 
 
 class ContactFormView(FormView):
@@ -38,4 +39,5 @@ class NoticeView(TemplateView):
         context["env_color"] = (
             "text-bg-primary" if color == "blue" else "text-bg-success" if color == "green" else "text-bg-danger"
         )
+        context["notices"] = Notice.objects.all().order_by("-created_at")
         return context

@@ -10,3 +10,9 @@ class ContactAdmin(admin.ModelAdmin):
         "is_resolved",
         "-created_at",
     )
+
+
+@admin.register(models.Notice)
+class NoticeAdmin(admin.ModelAdmin):
+    list_display = ("title", "created_at")
+    ordering = ("-created_at",)

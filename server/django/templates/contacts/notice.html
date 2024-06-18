@@ -7,7 +7,17 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">お知らせ</h1>
+    {% for notice in notices %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ notice.title }}</h5>
+            <p class="card-text">{{ notice.content }}</p>
+            <p class="card-text"><small class="text-muted">{{ notice.created_at }}</small></p>
+        </div>
+    </div>
+    {% empty %}
     <p>お知らせはまだありません</p>
+    {% endfor %}
 </div>
 
 <style>

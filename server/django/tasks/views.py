@@ -75,6 +75,7 @@ class TaskDetailView(TemplateView):
         context["task_ogp_img"] = task_ogp_img
         context["task"] = task
         context["todo_list"] = Todo.objects.filter(task=task).order_by("date")
+        context["today"] = datetime.now().date()
 
         # サポーター関連
         if task.fine >= int(settings.SUPPORTER_MESSAGE_THRESHOLD):

@@ -22,9 +22,11 @@
                 </div>
                 {% endif %}
                 <div>
+                    {% if not request.user.id == user.id %}
                     <a href="{% url 'users:profile' user.id %}" class="btn btn-secondary">
                         このユーザーのマイページへ
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
