@@ -63,7 +63,7 @@ def fetch_encouragement_messages(task_name, user_id, user_name, user_state, supp
         "user": user_id,
     }
 
-    response = requests.post(url, headers=headers, data=json.dumps(data), timeout=10)
+    response = requests.post(url, headers=headers, data=json.dumps(data), timeout=20)
     message = response.json()["data"]["outputs"]["message"]
     title = response.json()["data"]["outputs"]["title"]
     return title, message
