@@ -14,15 +14,20 @@
     const changeStylesForLoading = (todo_id) => {
         const selector = document.getElementsByName(todo_id)[0];
         selector.classList.add('disabled');
-        selector.innerHTML = "<span class='spinner-border spinner-border-sm' aria-hidden='true'></span> 処理中";;
+        selector.innerHTML = "<span class='spinner-border spinner-border-sm' aria-hidden='true' style='width: 13px; height: 13px;'></span> 処理中";
     }
 
     const changeStyles = (jsonResponse) => {
         const selector = document.getElementsByName(jsonResponse.todo_id)[0];
+        
         selector.setAttribute('data-url', "");
         selector.classList.replace('btn-secondary', 'btn-success');
         selector.classList.add('disabled');
         selector.innerHTML = "達成済み";
+
+        const badge = document.getElementById("todays-badge");
+        badge.classList.replace('text-bg-secondary', 'text-bg-success');
+        badge.innerHTML = "達成済み";
     }
 
     const whenDoneButtons = document.querySelectorAll('[data-button="when-done"]');

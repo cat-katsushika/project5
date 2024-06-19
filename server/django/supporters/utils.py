@@ -25,6 +25,14 @@ def create_encouragement_message(task_id, day_number):
     if EncouragementMessage.objects.filter(task=task, day_number=day_number).exists():
         return
     else:
+
+        encouragement_message = EncouragementMessage.objects.create(
+            task=task,
+            supporter=supporter,
+            day_number=day_number,
+        )
+        encouragement_message.save()
+
         if day_number == 0:
             user_state = "5日間の継続を始めようとしている"
         else:
@@ -33,13 +41,9 @@ def create_encouragement_message(task_id, day_number):
         title, message = fetch_encouragement_messages(
             task.title, str(task.user.id), task.user.username, user_state, supporter.name, supporter.personality
         )
-        EncouragementMessage.objects.create(
-            task=task,
-            supporter=supporter,
-            title=title,
-            message=message,
-            day_number=day_number,
-        )
+        encouragement_message.title = title
+        encouragement_message.message = message
+        encouragement_message.save()
 
 
 def fetch_encouragement_messages(task_name, user_id, user_name, user_state, supporter_name, supporter_personality):
@@ -63,7 +67,14 @@ def fetch_encouragement_messages(task_name, user_id, user_name, user_state, supp
         "user": user_id,
     }
 
-    response = requests.post(url, headers=headers, data=json.dumps(data), timeout=10)
-    message = response.json()["data"]["outputs"]["message"]
-    title = response.json()["data"]["outputs"]["title"]
+    response = requests.post(url, headers=headers, data=json.dumps(data), timeout=20)
+
+    # 何らかの理由で値を取得できなかった場合
+    try:
+        message = response.json()["data"]["outputs"]["message"]
+        title = response.json()["data"]["outputs"]["title"]
+    except:
+        message = "エラーにより取得できませんでした．"
+        title = "取得できませんでした．"
+
     return title, message

@@ -113,7 +113,27 @@
                     {% if task.status == "N" %}
                     <span class="badge text-bg-primary">未開始</span>
                     {% elif todo.status == "I" %}
-                    <span class="badge text-bg-secondary">挑戦待ち</span>
+                        {% if request.user == todo.task.user and todo.date == today %}
+                            <div class="row align-items-center">
+                                <div class="col-12 col-sm-auto mb-2 mb-sm-0">
+                                    <div class="d-flex justify-content-sm-end">
+                                        <span id="todays-badge" class="badge text-bg-secondary ">挑戦待ち</span>
+                                    </div>
+                                    <button
+                                    data-button="when-done"
+                                    data-url="{% url 'tasks:todo_done' todo.id %}"
+                                    name="{{ todo.id}}"
+                                    class="btn btn-secondary badge"
+                                    style="font-size: 0.75em; padding: .2em .65em; width: 103px; height: 20px;">
+                                        達成したらクリック
+                                    </button>
+
+
+                                </div>
+                            </div>
+                        {% else %}
+                            <span class="badge text-bg-secondary">挑戦待ち</span>
+                        {% endif %}                        
                     {% elif todo.status == "D" %}
                     <span class="badge text-bg-success">達成済み</span>
                     {% elif todo.status == "F" %}
@@ -164,7 +184,8 @@
         </div>
     </div>
 </div>
-<!-- URLコピー時のトースト -->
 
+{% include 'tasks/script_for_task_detail.html' %}
+<!-- URLコピー時のトースト -->
 {% include 'tasks/copy_url_script.html' %}
 {% endblock content %}
